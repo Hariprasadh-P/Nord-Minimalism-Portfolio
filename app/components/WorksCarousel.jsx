@@ -18,6 +18,18 @@ export const worksData = [
   },
   {
     id: 2,
+    title: "Studio Commercial Shoot",
+    client: "Gastronomy Collective",
+    category: "Production",
+    views: "67.3K",
+    likes: "5.8K",
+    duration: "0:34",
+    video: "/Works/shoot.mp4",
+    sound: "Culinary Beats • Studio Audio Master",
+    description: "Full production commercial shoot capturing sensory culinary textures, dynamic lighting, and cinematic table staging."
+  },
+  {
+    id: 3,
     title: "Brand Motion & Performance",
     client: "Directional Growth",
     category: "Motion Hook",
@@ -29,7 +41,19 @@ export const worksData = [
     description: "Rapid-fire visual hooks engineered for Instagram algorithm velocity and maximum watch-through rate."
   },
   {
-    id: 3,
+    id: 4,
+    title: "Behind The Scenes Production",
+    client: "Nord Media House",
+    category: "Production",
+    views: "39.1K",
+    likes: "3.2K",
+    duration: "0:21",
+    video: "/Works/IMG_6369.MOV",
+    sound: "Studio Sessions • Ambient Tape",
+    description: "Raw on-set motion and directional camera choreography from our high-fashion and commercial shoots."
+  },
+  {
+    id: 5,
     title: "Aesthetic Commercial Film",
     client: "Luminary Concept",
     category: "Commercial Reel",
@@ -41,7 +65,7 @@ export const worksData = [
     description: "Tactile product presentation spotlighting craftsmanship, natural lighting, and restrained typography."
   },
   {
-    id: 4,
+    id: 6,
     title: "Visualizing Sound & Rhythm",
     client: "Acoustic Elements",
     category: "Creative Video",
@@ -53,7 +77,7 @@ export const worksData = [
     description: "Audio-reactive typography and geometric motion designed for music launches and modern creative brands."
   },
   {
-    id: 5,
+    id: 7,
     title: "Pattern & Editorial Motion",
     client: "Atelier V",
     category: "Editorial",
@@ -65,7 +89,7 @@ export const worksData = [
     description: "High-fashion editorial layout transitions designed for carousel and vertical reel storytelling."
   },
   {
-    id: 6,
+    id: 8,
     title: "Selected Projects Reel",
     client: "Nord Media House",
     category: "Showreel",
@@ -77,7 +101,7 @@ export const worksData = [
     description: "Annual highlight showreel capturing top-performing short-form video campaigns and client growth milestones."
   },
   {
-    id: 7,
+    id: 9,
     title: "High-Impact Short Reel",
     client: "Kinetic Pulse",
     category: "Motion Hook",
@@ -87,6 +111,42 @@ export const worksData = [
     video: "/assets/works/web_1788119644325-1614-C0990.mp4",
     sound: "Velocity Beat • Fast Rhythms",
     description: "Sub-15s conversion engine tailored for Meta Ads top-of-funnel testing with 4.8x ROAS benchmark."
+  },
+  {
+    id: 10,
+    title: "Editorial Showcase",
+    client: "Atelier Nord",
+    category: "Editorial",
+    views: "52.6K",
+    likes: "4.3K",
+    duration: "0:22",
+    video: "/assets/works/web_1788119635110-6971-C0986.mp4",
+    sound: "Minimal Techno • Stockholm Bass",
+    description: "High-contrast editorial framing calibrated for digital lookbooks and magazine covers."
+  },
+  {
+    id: 11,
+    title: "Brand Campaign Direction",
+    client: "Velvet Horizons",
+    category: "Commercial Reel",
+    views: "44.9K",
+    likes: "3.6K",
+    duration: "0:26",
+    video: "/assets/works/web_1788118469423-3900-C0984.mp4",
+    sound: "Nord Acoustics • Horizon Chords",
+    description: "Full-spectrum commercial campaign reel engineered for organic viral distribution across Instagram."
+  },
+  {
+    id: 12,
+    title: "Product Reveal Reel",
+    client: "Form & Function",
+    category: "Creative Video",
+    views: "38.2K",
+    likes: "3.1K",
+    duration: "0:18",
+    video: "/assets/works/web_1788015687755-4511-C0982.mp4",
+    sound: "Nord Studio • Synths & Grain",
+    description: "Minimalist lighting sweeps and slow macro reveals spotlighting industrial product design."
   }
 ];
 
@@ -98,7 +158,7 @@ export default function WorksCarousel() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const carouselRef = useRef(null);
 
-  const categories = ["All", "Commercial Reel", "Motion Hook", "Creative Video", "Editorial"];
+  const categories = ["All", "Commercial Reel", "Motion Hook", "Production", "Showreel", "Creative Video", "Editorial"];
 
   const filteredWorks = selectedCategory === "All" 
     ? worksData 

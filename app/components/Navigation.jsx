@@ -15,10 +15,10 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { name: "Works", href: "#works" },
+    { name: "Reels", href: "#works" },
+    { name: "Photography", href: "#photography" },
     { name: "Methodology", href: "#methodology" },
     { name: "Retainers", href: "#pricing" },
-    { name: "Services", href: "#services" },
     { name: "Contact", href: "#contact" },
   ];
 

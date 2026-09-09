@@ -2,6 +2,7 @@ import React from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import WorksCarousel from './components/WorksCarousel';
+import ZigzagGallery from './components/ZigzagGallery';
 import Methodology from './components/Methodology';
 import PricingCards from './components/PricingCards';
 import Contact from './components/Contact';
@@ -17,8 +18,11 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Works & Horizontal Reel Showcase */}
+      {/* Works & Horizontal Reel Showcase (All Video Works) */}
       <WorksCarousel />
+
+      {/* Commercial Photography & Stills on a 3D Zigzag Plane */}
+      <ZigzagGallery />
 
       {/* Strategic 4-Phase Methodology */}
       <Methodology />
@@ -48,7 +52,8 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-8 text-xs uppercase tracking-[0.18em] font-medium text-[#1F1929]/70">
-            <a href="#works" className="hover:text-[#1F1929] transition-colors">Works</a>
+            <a href="#works" className="hover:text-[#1F1929] transition-colors">Reels</a>
+            <a href="#photography" className="hover:text-[#1F1929] transition-colors">Photography</a>
             <a href="#methodology" className="hover:text-[#1F1929] transition-colors">Methodology</a>
             <a href="#pricing" className="hover:text-[#1F1929] transition-colors">Retainers</a>
             <a href="#contact" className="hover:text-[#1F1929] transition-colors">Contact</a>
