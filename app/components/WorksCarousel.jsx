@@ -162,6 +162,107 @@ export const worksData = [
   }
 ];
 
+// Subcomponent for Video Card with In-View Scroll Autoplay, Creative Subtle Tilt, and Zero Fog
+function VideoCard({ work, index, isEven, onOpenModal }) {
+  const cardRef = useRef(null);
+  const videoRef = useRef(null);
+
+  // Autoplay video when in view while scrolling
+  React.useEffect(() => {
+    const video = videoRef.current;
+    const card = cardRef.current;
+    if (!video || !card) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {});
+            }
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(card);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Slight creative tilt: -2.2deg for even, +2.2deg for odd; straightens smoothly on hover
+  const tiltClass = isEven ? '-rotate-[2.2deg]' : 'rotate-[2.2deg]';
+
+  return (
+    <div className="w-full lg:w-1/2 flex justify-center py-2">
+      <div
+        ref={cardRef}
+        onClick={onOpenModal}
+        onMouseEnter={() => {
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {});
+          }
+        }}
+        className={`group relative w-[280px] sm:w-[325px] aspect-[9/16] rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer shadow-[0_20px_50px_rgba(44,36,59,0.14)] hover:shadow-[0_32px_75px_rgba(139,124,168,0.3)] transition-all duration-500 hover:-translate-y-2 hover:rotate-0 hover:scale-[1.025] transform-gpu border border-white/80 bg-stone-900/10 ${tiltClass}`}
+      >
+        {/* Crystal-Clear Live Video Preview (Zero Fog, Full Vibrancy & Crispness) */}
+        <video
+          ref={videoRef}
+          src={work.video}
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
+        />
+
+        {/* Localized Bottom Gradient Only (Protects Text Legibility Without Dulling the Video) */}
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
+
+        {/* Top Header Pills */}
+        <div className="relative z-10 flex items-center justify-between">
+          <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-black/45 border-white/20 backdrop-blur-md">
+            {work.category}
+          </span>
+          
+          <span className="glass-pill px-2.5 py-1 rounded-full text-[10px] tracking-wider font-semibold text-white/95 bg-black/45 border-white/20 backdrop-blur-md flex items-center gap-1.5 font-mono">
+            <svg className="w-3 h-3 text-[#D6C7EB]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+            </svg>
+            {work.views}
+          </span>
+        </div>
+
+        {/* Center Interactive Reel Indicator on Hover */}
+        <div className="relative z-10 my-auto flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md border border-white/70 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+            <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Bottom Info inside Card */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-1 text-white/80 text-[10px] uppercase tracking-[0.2em] font-semibold">
+            <span>{work.client}</span>
+            <span>•</span>
+            <span>{work.duration}</span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug drop-shadow-md">
+            {work.title}
+          </h3>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function WorksCarousel() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [displayLayout, setDisplayLayout] = useState('zigzag'); // 'zigzag' | 'horizontal'
@@ -290,154 +391,94 @@ export default function WorksCarousel() {
       {/* ========================================================
           MODE 1: EXPLORATORY ZIGZAG STREAM (VIDEOS)
           ======================================================== */}
-      {displayLayout === 'zigzag' && (
-        <div className="relative max-w-6xl mx-auto px-6 py-4">
-          {/* Center Dotted Zigzag Directional Track Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 border-r-2 border-dashed border-[#8B7CA8]/25 hidden lg:block pointer-events-none" />
+{displayLayout === 'zigzag' && (
+  <div className="relative max-w-6xl mx-auto px-6 py-4">
+    {/* Center Dotted Zigzag Directional Track Line */}
+    <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 border-r-2 border-dashed border-[#8B7CA8]/25 hidden lg:block pointer-events-none" />
 
-          <div className="flex flex-col gap-16 md:gap-24 relative z-10">
-            {filteredWorks.map((work, index) => {
-              const isEven = index % 2 === 0;
+    <div className="flex flex-col gap-16 md:gap-24 relative z-10">
+      {filteredWorks.map((work, index) => {
+        const isEven = index % 2 === 0;
 
-              return (
-                <motion.div
-                  key={work.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.65, delay: 0.05 }}
-                  className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-16 ${
-                    isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                  }`}
+        return (
+          <motion.div
+            key={work.id}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.65, delay: 0.05 }}
+            className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-16 ${
+              isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
+            }`}
+          >
+            {/* 9:16 In-View Autoplay Video Card with Slight Creative Tilt */}
+            <VideoCard
+              work={work}
+              index={index}
+              isEven={isEven}
+              onOpenModal={() => handleOpenModal(index)}
+            />
+
+            {/* Narrative Details Column */}
+            <div className="w-full lg:w-1/2 flex flex-col justify-center px-4">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-sm font-mono text-[#8B7CA8] font-bold">
+                  // 0{index + 1}
+                </span>
+                <span className="glass-pill px-3 py-0.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-[#1F1929]/80 bg-white">
+                  {work.category}
+                </span>
+                <span className="text-xs font-mono text-[#1F1929]/50">
+                  {work.duration}
+                </span>
+              </div>
+
+              <h3 className="text-3xl sm:text-4xl font-serif font-bold text-[#1F1929] mb-3 leading-tight">
+                {work.title}
+              </h3>
+
+              <p className="text-sm sm:text-base text-[#1F1929]/75 leading-relaxed font-sans mb-6">
+                {work.description}
+              </p>
+
+              {/* Meta Highlights & Sound */}
+              <div className="space-y-3 pt-4 border-t border-[#1F1929]/10 mb-6 text-xs text-[#1F1929]/70">
+                <div className="flex items-center gap-2 text-[#8B7CA8] font-semibold">
+                  <svg className="w-4 h-4 text-[#8B7CA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  <span>Performance Benchmark: <strong className="text-[#1F1929]">{work.metric}</strong></span>
+                </div>
+
+                <div className="flex items-center gap-2 text-[#1F1929]/70">
+                  <svg className="w-4 h-4 text-[#8B7CA8] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                  </svg>
+                  <span className="truncate">{work.sound}</span>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleOpenModal(index)}
+                  className="px-6 py-3 rounded-full bg-[#1F1929] text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#8B7CA8] transition-all flex items-center gap-2 shadow-md hover:scale-105 active:scale-95"
                 >
-                  {/* 9:16 Reel Video Card (Alternates Left / Right in Zigzag) */}
-                  <div className="w-full lg:w-1/2 flex justify-center">
-                    <div
-                      onClick={() => handleOpenModal(index)}
-                      className={`group relative w-[280px] sm:w-[320px] aspect-[9/16] rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer shadow-[0_20px_50px_rgba(44,36,59,0.12)] hover:shadow-[0_28px_70px_rgba(44,36,59,0.22)] transition-all duration-500 hover:-translate-y-2 ${
-                        isEven ? 'hover:-rotate-1' : 'hover:rotate-1'
-                      } border border-white/70 bg-black/90`}
-                      onMouseEnter={(e) => {
-                        const video = e.currentTarget.querySelector('video');
-                        if (video) {
-                          video.currentTime = 0;
-                          video.play().catch(() => {});
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        const video = e.currentTarget.querySelector('video');
-                        if (video) video.pause();
-                      }}
-                    >
-                      {/* Live Video Preview */}
-                      <video
-                        src={work.video}
-                        loop
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-95 group-hover:brightness-100"
-                      />
+                  <span>Watch in 3D Reel Viewer</span>
+                  <span>&rarr;</span>
+                </button>
 
-                      {/* Vignette Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30 pointer-events-none transition-opacity duration-300 group-hover:opacity-85" />
-
-                      {/* Top Header Pills */}
-                      <div className="relative z-10 flex items-center justify-between">
-                        <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-black/50 border-white/20 backdrop-blur-md">
-                          {work.category}
-                        </span>
-                        
-                        <span className="glass-pill px-2.5 py-1 rounded-full text-[10px] tracking-wider font-semibold text-white/90 bg-black/50 border-white/20 backdrop-blur-md flex items-center gap-1.5 font-mono">
-                          <svg className="w-3 h-3 text-[#BBA9D0]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                          </svg>
-                          {work.views}
-                        </span>
-                      </div>
-
-                      {/* Center Play Icon on Hover */}
-                      <div className="relative z-10 my-auto flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-16 h-16 rounded-full bg-white/25 backdrop-blur-md border border-white/60 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
-                          <svg className="w-7 h-7 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Bottom Info inside Card */}
-                      <div className="relative z-10">
-                        <div className="flex items-center gap-2 mb-1 text-white/70 text-[10px] uppercase tracking-[0.2em] font-semibold">
-                          <span>{work.client}</span>
-                          <span>•</span>
-                          <span>{work.duration}</span>
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug drop-shadow-md">
-                          {work.title}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Narrative Details Column */}
-                  <div className="w-full lg:w-1/2 flex flex-col justify-center px-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-sm font-mono text-[#8B7CA8] font-bold">
-                        // 0{index + 1}
-                      </span>
-                      <span className="glass-pill px-3 py-0.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-[#1F1929]/80 bg-white">
-                        {work.category}
-                      </span>
-                      <span className="text-xs font-mono text-[#1F1929]/50">
-                        {work.duration}
-                      </span>
-                    </div>
-
-                    <h3 className="text-3xl sm:text-4xl font-serif font-bold text-[#1F1929] mb-3 leading-tight">
-                      {work.title}
-                    </h3>
-
-                    <p className="text-sm sm:text-base text-[#1F1929]/75 leading-relaxed font-sans mb-6">
-                      {work.description}
-                    </p>
-
-                    {/* Meta Highlights & Sound */}
-                    <div className="space-y-3 pt-4 border-t border-[#1F1929]/10 mb-6 text-xs text-[#1F1929]/70">
-                      <div className="flex items-center gap-2 text-[#8B7CA8] font-semibold">
-                        <svg className="w-4 h-4 text-[#8B7CA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        <span>Performance Benchmark: <strong className="text-[#1F1929]">{work.metric}</strong></span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-[#1F1929]/70">
-                        <svg className="w-4 h-4 text-[#8B7CA8] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                        </svg>
-                        <span className="truncate">{work.sound}</span>
-                      </div>
-                    </div>
-
-                    {/* Action Button */}
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => handleOpenModal(index)}
-                        className="px-6 py-3 rounded-full bg-[#1F1929] text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#8B7CA8] transition-all flex items-center gap-2 shadow-md hover:scale-105 active:scale-95"
-                      >
-                        <span>Watch in 3D Reel Viewer</span>
-                        <span>&rarr;</span>
-                      </button>
-
-                      <span className="text-xs text-[#1F1929]/50 font-mono">
-                        {work.views} views
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                <span className="text-xs text-[#1F1929]/50 font-mono">
+                  {work.views} views
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  </div>
+)}
 
       {/* ========================================================
           MODE 2: 3D HORIZONTAL RAIL SCROLLER
@@ -536,9 +577,9 @@ export default function WorksCarousel() {
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-[0.95] group-hover:brightness-100"
+                    className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1F1929]/90 via-[#1F1929]/25 to-transparent pointer-events-none transition-opacity duration-300 group-hover:opacity-85" />
+                  <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
                   
                   <div className="relative z-10 flex items-center justify-between">
                     <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-black/40 border-white/20 backdrop-blur-md">
