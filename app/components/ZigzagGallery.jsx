@@ -106,45 +106,35 @@ export const photoWorks = [
 ];
 
 export default function ZigzagGallery() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [viewMode, setViewMode] = useState('plane'); // 'plane' | 'ribbon'
+  const [selectedTag, setSelectedTag] = useState("All");
   const [lightboxImage, setLightboxImage] = useState(null);
 
-  const total = photoWorks.length;
+  const tags = ["All", "Culinary Styling", "Commercial Still", "Luxury Dining", "Brand Campaign"];
 
-  const nextPhoto = () => {
-    setCurrentIndex((prev) => (prev + 1) % total);
-  };
-
-  const prevPhoto = () => {
-    setCurrentIndex((prev) => (prev - 1 + total) % total);
-  };
+  const filteredPhotos = selectedTag === "All"
+    ? photoWorks
+    : photoWorks.filter(p => p.category === selectedTag);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (lightboxImage) {
-        if (e.key === 'Escape') setLightboxImage(null);
-        return;
-      }
-      if (viewMode === 'plane') {
-        if (e.key === 'ArrowRight') nextPhoto();
-        if (e.key === 'ArrowLeft') prevPhoto();
+      if (lightboxImage && e.key === 'Escape') {
+        setLightboxImage(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [viewMode, lightboxImage]);
+  }, [lightboxImage]);
 
   return (
-    <section id="photography" className="py-24 sm:py-32 relative bg-[#FAF8FF] overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute top-1/4 right-10 w-96 h-96 bg-[#8B7CA8]/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-10 w-96 h-96 bg-[#BBA9D0]/10 rounded-full blur-[140px] pointer-events-none" />
+    <section id="photography" className="py-24 sm:py-32 relative bg-[#FAF8FF] overflow-hidden border-t border-[#1F1929]/5">
+      {/* Background ambient glows */}
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-[#8B7CA8]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/3 left-10 w-96 h-96 bg-[#BBA9D0]/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
             <div className="glass-pill px-4 py-1.5 rounded-full inline-flex items-center gap-2 mb-4">
               <span className="w-2 h-2 rounded-full bg-[#8B7CA8]" />
@@ -153,372 +143,98 @@ export default function ZigzagGallery() {
               </span>
             </div>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-[#1F1929] leading-tight">
-              Sensory Stills on a<br />
-              <span className="text-[#8B7CA8] font-normal italic">Zigzag Spatial Plane</span>
+              Sensory Stills &<br />
+              <span className="text-[#8B7CA8] font-normal italic">Editorial Catalog</span>
             </h2>
+            <p className="mt-3 text-sm text-[#1F1929]/70 max-w-xl">
+              High-resolution commercial gastronomy, bespoke menu layouts, packaging still lives, and founder portraiture.
+            </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* View Mode Switcher */}
-            <div className="glass-card p-1 rounded-full inline-flex items-center border-white/70 bg-white/70 shadow-sm">
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {tags.map((tag) => (
               <button
-                onClick={() => setViewMode('plane')}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-                  viewMode === 'plane'
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold transition-all whitespace-nowrap ${
+                  selectedTag === tag
                     ? 'bg-[#1F1929] text-white shadow-sm'
-                    : 'text-[#1F1929]/60 hover:text-[#1F1929]'
+                    : 'glass-card text-[#1F1929]/70 hover:text-[#1F1929] hover:bg-white/80'
                 }`}
               >
-                3D Zigzag Plane
+                {tag}
               </button>
-              <button
-                onClick={() => setViewMode('ribbon')}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-                  viewMode === 'ribbon'
-                    ? 'bg-[#1F1929] text-white shadow-sm'
-                    : 'text-[#1F1929]/60 hover:text-[#1F1929]'
-                }`}
-              >
-                Zigzag Stream
-              </button>
-            </div>
-
-            {/* Navigation Arrows for 3D plane mode */}
-            {viewMode === 'plane' && (
-              <div className="hidden sm:flex items-center gap-2">
-                <button
-                  onClick={prevPhoto}
-                  className="w-10 h-10 rounded-full glass-card flex items-center justify-center text-[#1F1929] hover:bg-[#1F1929] hover:text-white transition-all shadow-sm"
-                  aria-label="Previous photo in zigzag"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  onClick={nextPhoto}
-                  className="w-10 h-10 rounded-full glass-card flex items-center justify-center text-[#1F1929] hover:bg-[#1F1929] hover:text-white transition-all shadow-sm"
-                  aria-label="Next photo in zigzag"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            )}
+            ))}
           </div>
         </div>
 
-        {/* ========================================================
-            VIEW MODE 1: INTERACTIVE 3D ZIGZAG SPATIAL PLANE
-            ======================================================== */}
-        {viewMode === 'plane' && (
-          <div className="relative">
-            {/* Zigzag Flight Trajectory Indicator */}
-            <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto py-2 no-scrollbar">
-              {photoWorks.map((item, idx) => {
-                const isCurrent = idx === currentIndex;
-                const isEven = idx % 2 === 0;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setCurrentIndex(idx)}
-                    className="group relative flex flex-col items-center p-1 transition-all"
-                  >
-                    <div 
-                      className={`w-3.5 h-3.5 rounded-full transition-all duration-300 flex items-center justify-center ${
-                        isCurrent 
-                          ? 'bg-[#1F1929] scale-125 ring-4 ring-[#8B7CA8]/30 shadow-md' 
-                          : 'bg-white/80 border border-[#1F1929]/20 hover:scale-110 hover:border-[#8B7CA8]'
-                      }`}
-                    >
-                      <div className={`w-1 h-1 rounded-full ${isCurrent ? 'bg-[#BBA9D0]' : 'bg-transparent'}`} />
-                    </div>
-                    {/* Directional Zigzag Pin indicator */}
-                    <span className={`text-[8px] font-mono mt-1 transition-colors ${
-                      isCurrent ? 'text-[#1F1929] font-bold' : 'text-[#1F1929]/40'
-                    }`}>
-                      {isEven ? "↗" : "↘"}0{idx + 1}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* 3D Spatial Canvas */}
-            <div 
-              className="relative w-full h-[560px] sm:h-[640px] flex items-center justify-center overflow-hidden rounded-[3rem] glass-card border border-white/60 bg-gradient-to-b from-white/40 via-white/20 to-white/40 shadow-[0_20px_60px_rgba(44,36,59,0.06)]"
-              style={{ perspective: '1400px' }}
+        {/* Clean Luxury Editorial Photography Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredPhotos.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.06 }}
+              onClick={() => setLightboxImage(item)}
+              className="group glass-card p-4 rounded-[2.5rem] border border-white/70 bg-white/75 hover:bg-white hover:border-[#8B7CA8]/40 shadow-[0_16px_40px_rgba(44,36,59,0.06)] hover:shadow-[0_24px_60px_rgba(44,36,59,0.14)] transition-all duration-500 cursor-pointer flex flex-col justify-between hover:-translate-y-1.5"
             >
-              {/* Background ambient radar grid lines */}
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#1F192905_1px,transparent_1px),linear-gradient(to_bottom,#1F192905_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-
-              {/* Photos Distributed Across the Zigzag Spatial Coordinates */}
-              {photoWorks.map((item, index) => {
-                const offset = index - currentIndex;
-                const isCurrent = offset === 0;
-                const isVisible = Math.abs(offset) <= 2; // Show active and 2 neighbors on each side
+              {/* Image Frame */}
+              <div className="relative aspect-[4/5] rounded-[1.8rem] overflow-hidden bg-black/5">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
                 
-                if (!isVisible) return null;
+                {/* Frosted Glass Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1F1929]/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
 
-                // Alternating zigzag pattern calculation
-                // Even offsets swing right/top, odd offsets swing left/bottom
-                const isEvenSide = (index % 2 === 0);
-                const zigzagSign = isEvenSide ? 1 : -1;
-                
-                let xPos = 0;
-                let yPos = 0;
-                let zPos = 0;
-                let rotateZ = 0;
-                let rotateY = 0;
-                let scale = 1;
-                let opacity = 1;
-                let blur = 'blur(0px)';
-                let zIndex = 30;
+                {/* Top Badges */}
+                <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
+                  <span className="glass-pill px-3 py-1 rounded-full text-[9px] uppercase tracking-[0.2em] font-bold text-white bg-black/40 border-white/20 backdrop-blur-md">
+                    {item.category}
+                  </span>
+                  <span className="glass-pill px-2.5 py-0.5 rounded-full text-[9px] font-mono text-white/90 bg-black/40 border-white/20">
+                    {item.year}
+                  </span>
+                </div>
 
-                if (isCurrent) {
-                  xPos = 0;
-                  yPos = 0;
-                  zPos = 40;
-                  rotateZ = 0;
-                  rotateY = 0;
-                  scale = 1.05;
-                  opacity = 1;
-                  blur = 'blur(0px)';
-                  zIndex = 30;
-                } else {
-                  const dist = Math.abs(offset);
-                  // Dynamic zigzag trajectory: alternate sign * distance
-                  const dirSign = offset > 0 ? 1 : -1;
-                  xPos = dirSign * (dist * 260) * (isEvenSide ? 1.05 : 0.95);
-                  // Vertical zigzag wave bounce
-                  yPos = (offset % 2 === 0 ? -35 : 35);
-                  zPos = -dist * 200;
-                  rotateZ = zigzagSign * (dist * 6);
-                  rotateY = -dirSign * (dist * 14);
-                  scale = Math.max(0.72, 1 - dist * 0.15);
-                  opacity = Math.max(0.4, 0.9 - dist * 0.25);
-                  blur = `blur(${dist * 3.5}px)`;
-                  zIndex = 30 - dist * 5;
-                }
+                {/* Hover Inspect Icon */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/60 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                    </svg>
+                  </div>
+                </div>
 
-                return (
-                  <motion.div
-                    key={item.id}
-                    animate={{
-                      x: xPos,
-                      y: yPos,
-                      z: zPos,
-                      rotateZ: rotateZ,
-                      rotateY: rotateY,
-                      scale: scale,
-                      opacity: opacity,
-                      filter: blur,
-                    }}
-                    transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={() => {
-                      if (isCurrent) {
-                        setLightboxImage(item);
-                      } else {
-                        setCurrentIndex(index);
-                      }
-                    }}
-                    className={`absolute w-[290px] sm:w-[350px] aspect-[4/5] rounded-[2.5rem] overflow-hidden glass-card p-4 flex flex-col justify-between cursor-pointer transition-shadow ${
-                      isCurrent 
-                        ? 'border border-white/80 shadow-[0_25px_60px_rgba(44,36,59,0.25)] ring-2 ring-[#8B7CA8]/40' 
-                        : 'border border-white/40 shadow-lg hover:opacity-90'
-                    }`}
-                    style={{
-                      transformStyle: 'preserve-3d',
-                      zIndex: zIndex
-                    }}
-                  >
-                    {/* Photo Image */}
-                    <div className="relative w-full h-[78%] rounded-[1.8rem] overflow-hidden bg-black/5">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-                      
-                      {/* Top Pill Tags */}
-                      <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
-                        <span className="glass-pill px-3 py-1 rounded-full text-[9px] uppercase tracking-[0.2em] font-bold text-white bg-black/40 border-white/20 backdrop-blur-md">
-                          {item.category}
-                        </span>
-                        <span className="glass-pill px-2.5 py-0.5 rounded-full text-[9px] font-mono text-white/90 bg-black/40 border-white/20">
-                          {item.year}
-                        </span>
-                      </div>
-
-                      {/* Click to Zoom Icon for active card */}
-                      {isCurrent && (
-                        <div className="absolute bottom-3 right-3 z-10 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/40 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Bottom Metadata */}
-                    <div className="pt-3 px-1 flex flex-col justify-between">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-widest text-[#8B7CA8] font-bold">
-                          {item.client}
-                        </span>
-                        <span className="text-[10px] font-mono text-[#1F1929]/50">
-                          0{index + 1} / 0{total}
-                        </span>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-serif font-bold text-[#1F1929] truncate mt-0.5">
-                        {item.title}
-                      </h3>
-                    </div>
-                  </motion.div>
-                );
-              })}
-
-              {/* Mobile Prev / Next Controls inside stage */}
-              <div className="sm:hidden absolute bottom-4 inset-x-6 flex items-center justify-between z-40">
-                <button
-                  onClick={prevPhoto}
-                  className="px-4 py-2 rounded-full glass-card text-xs font-bold text-[#1F1929] flex items-center gap-1 shadow-md"
-                >
-                  &larr; Prev
-                </button>
-                <button
-                  onClick={nextPhoto}
-                  className="px-4 py-2 rounded-full bg-[#1F1929] text-xs font-bold text-white flex items-center gap-1 shadow-md"
-                >
-                  Next &rarr;
-                </button>
+                {/* Bottom Overlay Title inside image */}
+                <div className="absolute bottom-4 inset-x-4 z-10">
+                  <span className="text-[10px] uppercase tracking-widest text-white/80 font-bold block mb-1">
+                    {item.client}
+                  </span>
+                  <h3 className="text-lg font-serif font-bold text-white leading-tight drop-shadow-sm">
+                    {item.title}
+                  </h3>
+                </div>
               </div>
 
-            </div>
-
-            {/* Active Photo Caption & Narrative Card */}
-            <div className="mt-8 max-w-2xl mx-auto text-center glass-card p-6 rounded-3xl border border-white/70 bg-white/70 shadow-sm">
-              <div className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#8B7CA8] mb-1">
-                Active Coordinate &bull; Photo 0{currentIndex + 1} of {total}
+              {/* Card Footer */}
+              <div className="pt-3 px-2 flex items-center justify-between text-xs text-[#1F1929]/60">
+                <span className="truncate pr-2">{item.desc}</span>
+                <span className="font-bold text-[#8B7CA8] group-hover:translate-x-0.5 transition-transform flex-shrink-0">&rarr;</span>
               </div>
-              <h4 className="text-xl sm:text-2xl font-serif font-bold text-[#1F1929]">
-                {photoWorks[currentIndex].title}
-              </h4>
-              <p className="mt-2 text-xs sm:text-sm text-[#1F1929]/70 leading-relaxed font-sans">
-                {photoWorks[currentIndex].desc}
-              </p>
-              <div className="mt-4 flex items-center justify-center gap-4 text-xs font-bold uppercase tracking-wider text-[#1F1929]/60">
-                <span>Client: <strong className="text-[#1F1929]">{photoWorks[currentIndex].client}</strong></span>
-                <span>&bull;</span>
-                <button 
-                  onClick={() => setLightboxImage(photoWorks[currentIndex])}
-                  className="text-[#8B7CA8] hover:underline flex items-center gap-1"
-                >
-                  <span>Open Full Stills</span>
-                  <span>&rarr;</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* ========================================================
-            VIEW MODE 2: ZIGZAG EDITORIAL RIBBON STREAM
-            ======================================================== */}
-        {viewMode === 'ribbon' && (
-          <div className="relative max-w-5xl mx-auto py-8">
-            {/* Center Dotted Zigzag Guide Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 border-r-2 border-dashed border-[#8B7CA8]/25 hidden md:block" />
-
-            <div className="flex flex-col gap-16 md:gap-24">
-              {photoWorks.map((item, idx) => {
-                const isEven = idx % 2 === 0;
-                return (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 ${
-                      isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                    }`}
-                  >
-                    {/* Photo Card with Zigzag Tilt */}
-                    <div 
-                      className={`w-full md:w-1/2 group cursor-pointer transform transition-transform duration-500 ${
-                        isEven ? 'hover:-rotate-1' : 'hover:rotate-1'
-                      }`}
-                      onClick={() => setLightboxImage(item)}
-                    >
-                      <div className="glass-card p-4 rounded-[2.5rem] border-white/80 bg-white/80 shadow-[0_16px_40px_rgba(44,36,59,0.08)] overflow-hidden">
-                        <div className="relative aspect-[4/3] rounded-[1.8rem] overflow-hidden bg-black/5">
-                          <img
-                            src={item.image}
-                            alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                            <span className="glass-pill px-4 py-2 rounded-full text-xs uppercase tracking-widest text-white font-bold bg-black/50 border-white/20">
-                              View High-Res
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Metadata Narrative Column */}
-                    <div className="w-full md:w-1/2 flex flex-col">
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="font-mono text-xs text-[#8B7CA8] font-bold">
-                          // 0{idx + 1}
-                        </span>
-                        <span className="glass-pill px-3 py-0.5 rounded-full text-[9px] uppercase tracking-[0.2em] font-bold text-[#1F1929]/70 bg-white">
-                          {item.category}
-                        </span>
-                        <span className="text-xs text-[#1F1929]/40 font-mono">
-                          {item.year}
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#1F1929] mb-3">
-                        {item.title}
-                      </h3>
-
-                      <p className="text-sm text-[#1F1929]/70 leading-relaxed font-sans mb-6">
-                        {item.desc}
-                      </p>
-
-                      <div className="pt-4 border-t border-[#1F1929]/10 flex items-center justify-between text-xs">
-                        <span className="text-[#1F1929]/60 font-semibold uppercase tracking-wider">
-                          Client: {item.client}
-                        </span>
-                        <button
-                          onClick={() => setLightboxImage(item)}
-                          className="font-bold text-[#1F1929] hover:text-[#8B7CA8] transition-colors flex items-center gap-1 uppercase tracking-wider"
-                        >
-                          <span>Expand Stills</span>
-                          <span>&rarr;</span>
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+            </motion.div>
+          ))}
+        </div>
 
       </div>
 
-      {/* ========================================================
-          FULL-SCREEN FROSTED LIGHTBOX MODAL
-          ======================================================== */}
+      {/* Full-Screen Frosted Lightbox Modal */}
       <AnimatePresence>
         {lightboxImage && (
           <motion.div
@@ -580,11 +296,11 @@ export default function ZigzagGallery() {
                     </div>
                     <div className="flex justify-between">
                       <span className="uppercase tracking-widest text-[10px] text-[#8B7CA8]">Discipline</span>
-                      <span className="font-semibold text-[#1F1929]">Commercial Photography & Food Styling</span>
+                      <span className="font-semibold text-[#1F1929]">Commercial Photography & Stills</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="uppercase tracking-widest text-[10px] text-[#8B7CA8]">Licensing</span>
-                      <span className="font-semibold text-[#1F1929]">Commercial Retainer Asset</span>
+                      <span className="uppercase tracking-widest text-[10px] text-[#8B7CA8]">Usage</span>
+                      <span className="font-semibold text-[#1F1929]">Editorial Menus, Banners & Packaging</span>
                     </div>
                   </div>
                 </div>
@@ -595,7 +311,7 @@ export default function ZigzagGallery() {
                     onClick={() => setLightboxImage(null)}
                     className="w-full py-3.5 rounded-full bg-[#1F1929] text-white text-xs font-bold uppercase tracking-[0.2em] text-center hover:bg-[#8B7CA8] transition-colors shadow-md"
                   >
-                    Inquire Photography Project &rarr;
+                    Inquire Photography Retainer &rarr;
                   </a>
                 </div>
               </div>
@@ -603,7 +319,6 @@ export default function ZigzagGallery() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </section>
   );
 }
