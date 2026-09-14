@@ -16,7 +16,8 @@ export default function DimensionalCanvas() {
   const containerRef = useRef(null);
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(null);
+  const [photoSwipeDir, setPhotoSwipeDir] = useState(0);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [contactData, setContactData] = useState({
     name: "",
@@ -335,7 +336,7 @@ export default function DimensionalCanvas() {
                     key={photo.id}
                     whileHover={{ scale: 1.06, z: 70 }}
                     transition={{ duration: 0.35 }}
-                    onClick={() => setSelectedPhoto(photo)}
+                    onClick={() => setSelectedPhotoIndex(idx)}
                     style={{
                       transform: `translate3d(0, 0, ${(idx % 2 === 0 ? 30 : -30)}px)`,
                       transformStyle: "preserve-3d",
@@ -616,41 +617,164 @@ export default function DimensionalCanvas() {
         onClose={() => setIsModalOpen(false)}
       />
 
-      {/* Fullscreen Photo Modal */}
+      {/* Fullscreen Swipeable Photo Modal */}
       <AnimatePresence>
-        {selectedPhoto && (
+        {selectedPhotoIndex !== null && photoWorks[selectedPhotoIndex] && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedPhoto(null)}
-            className="fixed inset-0 z-[1050] bg-[#16041D]/90 backdrop-blur-2xl flex items-center justify-center p-6 cursor-zoom-out"
+            onClick={() => setSelectedPhotoIndex(null)}
+            className="fixed inset-0 z-[1050] bg-[#16041D]/92 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-8 select-none"
           >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-w-2xl w-full bg-[#FAF7F2] rounded-3xl overflow-hidden shadow-2xl border border-[#22092C]/20 p-6"
+            {/* Top Bar */}
+            <div className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-8 flex items-center justify-between z-40 pointer-events-none">
+              <div className="flex items-center gap-3 pointer-events-auto">
+                <span className="nord-pill px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#FAF7F2] bg-white/10 border-white/20 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#C7BBD0] animate-pulse" />
+                  <span>3D STILL ARCHIVE</span>
+                </span>
+                <span className="text-xs text-white/70 tracking-widest font-mono">
+                  0{selectedPhotoIndex + 1} / 0{photoWorks.length}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3 pointer-events-auto">
+                <button
+                  onClick={() => setSelectedPhotoIndex(null)}
+                  className="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 cursor-pointer"
+                  title="Close (Esc)"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Previous Arrow Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setPhotoSwipeDir(-1);
+                setSelectedPhotoIndex((prev) => (prev - 1 + photoWorks.length) % photoWorks.length);
+              }}
+              className="absolute left-3 sm:left-6 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 shadow-2xl cursor-pointer hover:scale-105 active:scale-95"
+              aria-label="Previous Still"
             >
-              <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden mb-4">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Next Arrow Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setPhotoSwipeDir(1);
+                setSelectedPhotoIndex((prev) => (prev + 1) % photoWorks.length);
+              }}
+              className="absolute right-3 sm:right-6 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 shadow-2xl cursor-pointer hover:scale-105 active:scale-95"
+              aria-label="Next Still"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Swipeable / Draggable Photo Container */}
+            <motion.div
+              key={photoWorks[selectedPhotoIndex].id}
+              initial={{
+                opacity: 0,
+                x: photoSwipeDir > 0 ? 80 : -80,
+                scale: 0.96,
+              }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{
+                opacity: 0,
+                x: photoSwipeDir > 0 ? -80 : 80,
+                scale: 0.96,
+              }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.3}
+              onDragEnd={(e, { offset, velocity }) => {
+                if (offset.x > 60 || velocity.x > 400) {
+                  setPhotoSwipeDir(-1);
+                  setSelectedPhotoIndex((prev) => (prev - 1 + photoWorks.length) % photoWorks.length);
+                } else if (offset.x < -60 || velocity.x < -400) {
+                  setPhotoSwipeDir(1);
+                  setSelectedPhotoIndex((prev) => (prev + 1) % photoWorks.length);
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-2xl w-full bg-[#FAF7F2] rounded-[2.5rem] overflow-hidden shadow-2xl border border-[#22092C]/20 p-6 flex flex-col cursor-grab active:cursor-grabbing"
+            >
+              <div className="relative aspect-[4/5] sm:aspect-[16/11] max-h-[55vh] w-full rounded-2xl overflow-hidden mb-4 bg-[#16041D]">
                 <Image
-                  src={selectedPhoto.imageWebp || selectedPhoto.image}
-                  alt={selectedPhoto.title}
+                  src={photoWorks[selectedPhotoIndex].imageWebp || photoWorks[selectedPhotoIndex].image}
+                  alt={photoWorks[selectedPhotoIndex].title}
                   fill
+                  priority
+                  draggable={false}
                   className="object-cover"
                 />
               </div>
+
+              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[#22092C]/60 font-mono mb-1">
+                <span>{photoWorks[selectedPhotoIndex].client}</span>
+                <span>{photoWorks[selectedPhotoIndex].resolution}</span>
+              </div>
+
               <h3 className="font-syne text-xl font-bold text-[#22092C]">
-                {selectedPhoto.title}
+                {photoWorks[selectedPhotoIndex].title}
               </h3>
               <p className="text-xs text-[#22092C]/70 mt-1">
-                {selectedPhoto.desc}
+                {photoWorks[selectedPhotoIndex].desc}
               </p>
-              <button
-                onClick={() => setSelectedPhoto(null)}
-                className="mt-4 px-5 py-2 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs font-bold uppercase tracking-wider"
-              >
-                Close Still
-              </button>
-            </div>
+
+              <div className="mt-4 pt-3 border-t border-[#22092C]/10 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  {photoWorks.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      onClick={() => {
+                        setPhotoSwipeDir(dotIdx > selectedPhotoIndex ? 1 : -1);
+                        setSelectedPhotoIndex(dotIdx);
+                      }}
+                      className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                        dotIdx === selectedPhotoIndex
+                          ? "w-5 bg-[#22092C]"
+                          : "w-1.5 bg-[#22092C]/25 hover:bg-[#22092C]/50"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setPhotoSwipeDir(-1);
+                      setSelectedPhotoIndex((prev) => (prev - 1 + photoWorks.length) % photoWorks.length);
+                    }}
+                    className="px-3.5 py-1.5 rounded-full border border-[#22092C]/20 text-[#22092C] text-xs font-mono font-bold hover:bg-[#22092C]/5 transition-colors cursor-pointer"
+                  >
+                    &larr; Prev
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPhotoSwipeDir(1);
+                      setSelectedPhotoIndex((prev) => (prev + 1) % photoWorks.length);
+                    }}
+                    className="px-3.5 py-1.5 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs font-mono font-bold hover:bg-[#3D1550] transition-colors cursor-pointer"
+                  >
+                    Next &rarr;
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
