@@ -183,6 +183,8 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
             // Only render current reel and immediate front & back reels
             if (!isCurrent && !isPrev && !isNext) return null;
 
+            const isLandscape = work.aspectRatio === '16/9';
+
             // 3D positioning, depth, and optical blur calculations
             let xOffset = "0%";
             let zOffset = 0;
@@ -202,23 +204,27 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
               zIndex = 30;
             } else if (isPrev) {
               // Back Reel (Left): Blurry, tilted, depth pushed back
-              xOffset = "-56%";
+              xOffset = isLandscape ? "-65%" : "-56%";
               zOffset = -220;
-              rotateY = 22;
+              rotateY = 20;
               scale = 0.84;
               opacity = 0.6;
               blurFilter = "blur(8px)";
               zIndex = 20;
             } else if (isNext) {
               // Front Reel (Right): Blurry, tilted, depth pushed back
-              xOffset = "56%";
+              xOffset = isLandscape ? "65%" : "56%";
               zOffset = -220;
-              rotateY = -22;
+              rotateY = -20;
               scale = 0.84;
               opacity = 0.6;
               blurFilter = "blur(8px)";
               zIndex = 20;
             }
+
+            const cardAspectClass = isLandscape
+              ? 'w-[92vw] max-w-4xl max-h-[75vh] aspect-[16/9]'
+              : 'w-[300px] sm:w-[380px] max-h-[82vh] h-full aspect-[9/16]';
 
             return (
               <motion.div
@@ -237,7 +243,7 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
                   if (isPrev) handlePrev();
                   if (isNext) handleNext();
                 }}
-                className={`absolute max-h-[82vh] h-full aspect-[9/16] rounded-[2.5rem] overflow-hidden bg-black flex flex-col justify-between shadow-2xl transition-shadow ${
+                className={`absolute ${cardAspectClass} rounded-[2.5rem] overflow-hidden bg-black flex flex-col justify-between shadow-2xl transition-all duration-500 ${
                   isCurrent 
                     ? 'border border-white/40 ring-2 ring-[#8B7CA8]/40 shadow-[0_25px_80px_rgba(0,0,0,0.8)]' 
                     : 'border border-white/10 cursor-pointer hover:opacity-80'
@@ -247,7 +253,7 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
                   zIndex: zIndex
                 }}
               >
-                {/* Reel Video */}
+                {/* Reel Video displayed in 100% original aspect ratio without side cutting */}
                 <video
                   ref={isCurrent ? videoRef : null}
                   src={work.video}
@@ -256,19 +262,19 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
                   muted={isCurrent ? isMuted : true}
                   playsInline={true}
                   onClick={isCurrent ? togglePlayPause : undefined}
-                  className={`absolute inset-0 w-full h-full object-cover ${
+                  className={`absolute inset-0 w-full h-full object-contain ${
                     isCurrent ? 'cursor-pointer' : 'pointer-events-none'
                   }`}
                 />
 
-                {/* Vignette Gradients */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40 pointer-events-none" />
+                {/* Localized Vignette Gradients */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40 pointer-events-none" />
 
                 {/* Overlays for Non-Current (Front/Back) Reels */}
                 {!isCurrent && (
-                  <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/20 backdrop-blur-[2px] pointer-events-none">
-                    <span className="glass-pill px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-white/90 bg-black/50 border-white/20">
-                      {isPrev ? "← Previous Reel" : "Next Reel →"}
+                  <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/30 backdrop-blur-[2px] pointer-events-none">
+                    <span className="glass-pill px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-white/90 bg-black/60 border-white/20">
+                      {isPrev ? "← Previous Work" : "Next Work →"}
                     </span>
                   </div>
                 )}

@@ -6,22 +6,11 @@ import ReelsModal from './ReelsModal';
 export const worksData = [
   {
     id: 1,
-    title: "Cinematic Brand Film",
-    client: "Nord Studio",
-    category: "Commercial Reel",
-    views: "42.8K",
-    likes: "3.4K",
-    duration: "0:28",
-    video: "/assets/works/web_1788119681753-5961-165_hot_04_2.mp4",
-    sound: "Nord Audio • Horizon Cinematic Theme",
-    metric: "94% Watch-Through Rate",
-    description: "Atmospheric brand narrative combining Scandinavian minimalism with rich color grading and high-retention pacing."
-  },
-  {
-    id: 2,
     title: "Studio Commercial Shoot",
     client: "Gastronomy Collective",
-    category: "Production",
+    category: "Commercial Reel",
+    aspectRatio: "9/16",
+    orientation: "portrait",
     views: "67.3K",
     likes: "5.8K",
     duration: "0:34",
@@ -31,134 +20,19 @@ export const worksData = [
     description: "Full production commercial shoot capturing sensory culinary textures, dynamic lighting, and cinematic table staging."
   },
   {
-    id: 3,
-    title: "Brand Motion & Performance",
-    client: "Directional Growth",
-    category: "Motion Hook",
-    views: "58.2K",
-    likes: "4.9K",
-    duration: "0:15",
-    video: "/assets/works/web_1788119600904-8108-C0985.mp4",
-    sound: "Trending Bassline • Minimalist Beat",
-    metric: "1.2M Organic Impressions",
-    description: "Rapid-fire visual hooks engineered for Instagram algorithm velocity and maximum watch-through rate."
-  },
-  {
-    id: 4,
+    id: 2,
     title: "Behind The Scenes Production",
     client: "Nord Media House",
     category: "Production",
+    aspectRatio: "16/9",
+    orientation: "landscape",
     views: "39.1K",
     likes: "3.2K",
     duration: "0:21",
     video: "/Works/IMG_6369.MOV",
     sound: "Studio Sessions • Ambient Tape",
-    metric: "Top Viral Sound Hook",
-    description: "Raw on-set motion and directional camera choreography from our high-fashion and commercial shoots."
-  },
-  {
-    id: 5,
-    title: "Aesthetic Commercial Film",
-    client: "Luminary Concept",
-    category: "Commercial Reel",
-    views: "36.4K",
-    likes: "2.8K",
-    duration: "0:32",
-    video: "/assets/works/web_1788016785248-688-C0984.mp4",
-    sound: "Ambient Chill • Stockholm Waves",
-    metric: "88% First-3s Retention",
-    description: "Tactile product presentation spotlighting craftsmanship, natural lighting, and restrained typography."
-  },
-  {
-    id: 6,
-    title: "Visualizing Sound & Rhythm",
-    client: "Acoustic Elements",
-    category: "Creative Video",
-    views: "64.1K",
-    likes: "6.2K",
-    duration: "0:24",
-    video: "/assets/works/web_1788119121437-7013-C0986.mp4",
-    sound: "Spatial Synthesizer • Studio Master",
-    metric: "6.2K Sound Saves",
-    description: "Audio-reactive typography and geometric motion designed for music launches and modern creative brands."
-  },
-  {
-    id: 7,
-    title: "Pattern & Editorial Motion",
-    client: "Atelier V",
-    category: "Editorial",
-    views: "29.7K",
-    likes: "2.1K",
-    duration: "0:19",
-    video: "/assets/works/web_1788118482503-4229-C0986.mp4",
-    sound: "Nord Studio • Ambient Tape Loop",
-    metric: "Magazine Feature 2025",
-    description: "High-fashion editorial layout transitions designed for carousel and vertical reel storytelling."
-  },
-  {
-    id: 8,
-    title: "Selected Projects Reel",
-    client: "Nord Media House",
-    category: "Showreel",
-    views: "89.5K",
-    likes: "8.7K",
-    duration: "0:45",
-    video: "/assets/works/web_1788014576349-7262-C0982.mp4",
-    sound: "Original Score • Directional Momentum",
-    metric: "Annual Studio Showcase",
-    description: "Annual highlight showreel capturing top-performing short-form video campaigns and client growth milestones."
-  },
-  {
-    id: 9,
-    title: "High-Impact Short Reel",
-    client: "Kinetic Pulse",
-    category: "Motion Hook",
-    views: "47.3K",
-    likes: "3.9K",
-    duration: "0:12",
-    video: "/assets/works/web_1788119644325-1614-C0990.mp4",
-    sound: "Velocity Beat • Fast Rhythms",
-    metric: "4.8x Meta Ads ROAS",
-    description: "Sub-15s conversion engine tailored for Meta Ads top-of-funnel testing with 4.8x ROAS benchmark."
-  },
-  {
-    id: 10,
-    title: "Editorial Showcase",
-    client: "Atelier Nord",
-    category: "Editorial",
-    views: "52.6K",
-    likes: "4.3K",
-    duration: "0:22",
-    video: "/assets/works/web_1788119635110-6971-C0986.mp4",
-    sound: "Minimal Techno • Stockholm Bass",
-    metric: "Lookbook Collection",
-    description: "High-contrast editorial framing calibrated for digital lookbooks and magazine covers."
-  },
-  {
-    id: 11,
-    title: "Brand Campaign Direction",
-    client: "Velvet Horizons",
-    category: "Commercial Reel",
-    views: "44.9K",
-    likes: "3.6K",
-    duration: "0:26",
-    video: "/assets/works/web_1788118469423-3900-C0984.mp4",
-    sound: "Nord Acoustics • Horizon Chords",
-    metric: "320% Social Follower Surge",
-    description: "Full-spectrum commercial campaign reel engineered for organic viral distribution across Instagram."
-  },
-  {
-    id: 12,
-    title: "Product Reveal Reel",
-    client: "Form & Function",
-    category: "Creative Video",
-    views: "38.2K",
-    likes: "3.1K",
-    duration: "0:18",
-    video: "/assets/works/web_1788015687755-4511-C0982.mp4",
-    sound: "Nord Studio • Synths & Grain",
-    metric: "Industrial Design Still",
-    description: "Minimalist lighting sweeps and slow macro reveals spotlighting industrial product design."
+    metric: "4K Cinema Master",
+    description: "Raw on-set motion, directional camera choreography, and widescreen cinematic capture from our high-fashion commercial shoots."
   }
 ];
 
@@ -199,8 +73,14 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
   // Slight creative tilt: -2.2deg for even, +2.2deg for odd; straightens smoothly on hover
   const tiltClass = isEven ? '-rotate-[2.2deg]' : 'rotate-[2.2deg]';
 
+  // Dynamic aspect ratio according to original video dimensions (no sides cut off!)
+  const isLandscape = work.aspectRatio === '16/9';
+  const aspectClass = isLandscape
+    ? 'w-full max-w-[540px] sm:max-w-[620px] aspect-[16/9]'
+    : 'w-[280px] sm:w-[325px] aspect-[9/16]';
+
   return (
-    <div className="w-full lg:w-1/2 flex justify-center py-2">
+    <div className={`w-full ${isLandscape ? 'lg:w-3/5' : 'lg:w-1/2'} flex justify-center py-2`}>
       <div
         ref={cardRef}
         onClick={onOpenModal}
@@ -209,16 +89,16 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
             videoRef.current.play().catch(() => {});
           }
         }}
-        className={`group relative w-[280px] sm:w-[325px] aspect-[9/16] rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer shadow-[0_20px_50px_rgba(44,36,59,0.14)] hover:shadow-[0_32px_75px_rgba(139,124,168,0.3)] transition-all duration-500 hover:-translate-y-2 hover:rotate-0 hover:scale-[1.025] transform-gpu border border-white/80 bg-stone-900/10 ${tiltClass}`}
+        className={`group relative ${aspectClass} rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer shadow-[0_20px_50px_rgba(44,36,59,0.14)] hover:shadow-[0_32px_75px_rgba(139,124,168,0.3)] transition-all duration-500 hover:-translate-y-2 hover:rotate-0 hover:scale-[1.025] transform-gpu border border-white/80 bg-stone-900/10 ${tiltClass}`}
       >
-        {/* Crystal-Clear Live Video Preview (Zero Fog, Full Vibrancy & Crispness) */}
+        {/* Crystal-Clear Live Video Preview matching original aspect ratio without side cutting */}
         <video
           ref={videoRef}
           src={work.video}
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
+          className="absolute inset-0 w-full h-full object-contain sm:object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
         />
 
         {/* Localized Bottom Gradient Only (Protects Text Legibility Without Dulling the Video) */}
@@ -230,12 +110,17 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
             {work.category}
           </span>
           
-          <span className="glass-pill px-2.5 py-1 rounded-full text-[10px] tracking-wider font-semibold text-white/95 bg-black/45 border-white/20 backdrop-blur-md flex items-center gap-1.5 font-mono">
-            <svg className="w-3 h-3 text-[#D6C7EB]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-            </svg>
-            {work.views}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="glass-pill px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider font-semibold text-white/90 bg-white/15 border-white/25">
+              {work.aspectRatio}
+            </span>
+            <span className="glass-pill px-2.5 py-1 rounded-full text-[10px] tracking-wider font-semibold text-white/95 bg-black/45 border-white/20 backdrop-blur-md flex items-center gap-1.5 font-mono">
+              <svg className="w-3 h-3 text-[#D6C7EB]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              {work.views}
+            </span>
+          </div>
         </div>
 
         {/* Center Interactive Reel Indicator on Hover */}
@@ -253,6 +138,8 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
             <span>{work.client}</span>
             <span>•</span>
             <span>{work.duration}</span>
+            <span>•</span>
+            <span className="text-[#D6C7EB]">{work.orientation.toUpperCase()}</span>
           </div>
           <h3 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug drop-shadow-md">
             {work.title}
@@ -272,7 +159,7 @@ export default function WorksCarousel() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const carouselRef = useRef(null);
 
-  const categories = ["All", "Commercial Reel", "Motion Hook", "Production", "Showreel", "Creative Video", "Editorial"];
+  const categories = ["All", ...Array.from(new Set(worksData.map(item => item.category)))];
 
   const filteredWorks = selectedCategory === "All" 
     ? worksData 
@@ -536,6 +423,8 @@ export default function WorksCarousel() {
                 zIndexStyle = 10;
               }
 
+              const isLandscape = work.aspectRatio === '16/9';
+
               return (
                 <motion.div
                   key={work.id}
@@ -566,7 +455,9 @@ export default function WorksCarousel() {
                     const video = e.currentTarget.querySelector('video');
                     if (video) video.pause();
                   }}
-                  className={`group relative flex-shrink-0 w-[280px] sm:w-[320px] aspect-[9/16] rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer transition-all duration-500 ${
+                  className={`group relative flex-shrink-0 ${
+                    isLandscape ? 'w-[360px] sm:w-[480px] aspect-[16/9]' : 'w-[280px] sm:w-[320px] aspect-[9/16]'
+                  } rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer transition-all duration-500 ${
                     isCurrent 
                       ? 'border-[#8B7CA8]/50 ring-2 ring-[#8B7CA8]/30 shadow-[0_24px_60px_rgba(44,36,59,0.22)]' 
                       : 'border-white/50 shadow-[0_12px_30px_rgba(31,25,41,0.08)]'
@@ -577,7 +468,7 @@ export default function WorksCarousel() {
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
+                    className="absolute inset-0 w-full h-full object-contain sm:object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
                   />
                   <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
                   
