@@ -137,12 +137,14 @@ export default function Contact() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
+                  <label htmlFor="contactName" className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
                     Your Name *
                   </label>
                   <input
+                    id="contactName"
                     type="text"
                     required
+                    aria-required="true"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Erik Lindqvist"
@@ -151,12 +153,14 @@ export default function Contact() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
+                  <label htmlFor="contactEmail" className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
                     Email Address *
                   </label>
                   <input
+                    id="contactEmail"
                     type="email"
                     required
+                    aria-required="true"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="brand@example.com"
@@ -167,20 +171,21 @@ export default function Contact() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
+                  <label htmlFor="contactPhone" className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
                     WhatsApp / Phone
                   </label>
                   <input
+                    id="contactPhone"
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+91 (555) 000-0000"
                     className="w-full px-4 py-3 rounded-2xl bg-white/60 border border-[#1F1929]/10 focus:border-[#8B7CA8] focus:bg-white text-sm text-[#1F1929] outline-none transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
+                  <label htmlFor="contactPackage" className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
                     Retainer Package / Service
                   </label>
                   <select
@@ -199,10 +204,11 @@ export default function Contact() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
+                <label htmlFor="contactNotes" className="text-[11px] uppercase tracking-[0.18em] font-bold text-[#1F1929]/70">
                   Project Brief & Brand Goals
                 </label>
                 <textarea
+                  id="contactNotes"
                   rows="4"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}

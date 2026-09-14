@@ -19,6 +19,7 @@ export default function Navigation() {
     { name: "Photography", href: "#photography" },
     { name: "Methodology", href: "#methodology" },
     { name: "Retainers", href: "#pricing" },
+    { name: "FAQ", href: "#faq" },
     { name: "Contact", href: "#contact" },
   ];
 
