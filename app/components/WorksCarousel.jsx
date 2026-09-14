@@ -16,6 +16,8 @@ export const worksData = [
     category: "Commercial Reel",
     aspectRatio: "9/16",
     orientation: "portrait",
+    qualityBadge: "1080P • 60FPS",
+    resolution: "1080×1920 Full HD Master",
     views: "67.3K",
     likes: "5.8K",
     duration: "0:34",
@@ -31,6 +33,8 @@ export const worksData = [
     category: "Production",
     aspectRatio: "16/9",
     orientation: "landscape",
+    qualityBadge: "4K UHD • 60FPS",
+    resolution: "3840×2160 Cinema Master",
     views: "39.1K",
     likes: "3.2K",
     duration: "0:21",
@@ -96,14 +100,15 @@ const VideoCard = React.memo(function VideoCard({ work, index, isEven, onOpenMod
         }}
         className={`group relative ${aspectClass} rounded-[2.5rem] overflow-hidden glass-card p-6 flex flex-col justify-between cursor-pointer shadow-[0_20px_50px_rgba(44,36,59,0.14)] hover:shadow-[0_32px_75px_rgba(139,124,168,0.3)] transition-all duration-500 hover:-translate-y-2 hover:rotate-0 hover:scale-[1.025] transform-gpu border border-white/80 bg-stone-900/10 ${tiltClass}`}
       >
-        {/* Crystal-Clear Live Video Preview matching original aspect ratio without side cutting */}
+        {/* Crystal-Clear Live Video Preview matching original aspect ratio with Hardware Contrast Optimization */}
         <video
           ref={videoRef}
           src={work.video}
-          preload="metadata"
+          preload="auto"
           loop
           muted
           playsInline
+          style={{ imageRendering: '-webkit-optimize-contrast', transform: 'translate3d(0, 0, 0)' }}
           className="absolute inset-0 w-full h-full object-contain sm:object-cover -z-10 group-hover:scale-105 transition-transform duration-700 brightness-100 contrast-[1.02]"
         />
 
@@ -112,9 +117,14 @@ const VideoCard = React.memo(function VideoCard({ work, index, isEven, onOpenMod
 
         {/* Top Header Pills */}
         <div className="relative z-10 flex items-center justify-between">
-          <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-black/45 border-white/20 backdrop-blur-md">
-            {work.category}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-black/45 border-white/20 backdrop-blur-md">
+              {work.category}
+            </span>
+            <span className="glass-pill px-2 py-0.5 rounded-full text-[8.5px] font-mono tracking-wider font-bold text-[#E2D9F3] bg-black/60 border-[#8B7CA8]/40 backdrop-blur-md">
+              {work.qualityBadge}
+            </span>
+          </div>
           
           <div className="flex items-center gap-2">
             <span className="glass-pill px-2 py-0.5 rounded-full text-[9px] font-mono tracking-wider font-semibold text-white/90 bg-white/15 border-white/25">

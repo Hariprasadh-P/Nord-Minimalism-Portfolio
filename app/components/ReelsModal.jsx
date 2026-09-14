@@ -80,6 +80,23 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
     }));
   };
 
+  const toggleFullscreen = (e) => {
+    if (e) e.stopPropagation();
+    if (!document.fullscreenElement) {
+      if (videoRef.current) {
+        if (videoRef.current.requestFullscreen) {
+          videoRef.current.requestFullscreen().catch(() => {});
+        } else if (videoRef.current.webkitRequestFullscreen) {
+          videoRef.current.webkitRequestFullscreen();
+        }
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -103,6 +120,17 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
           </div>
 
           <div className="flex items-center gap-3 pointer-events-auto">
+            {/* Fullscreen Master Player Toggle */}
+            <button
+              onClick={toggleFullscreen}
+              className="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20"
+              title="Full Screen Cinema (F)"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+            </button>
+
             {/* Audio Toggle */}
             <button
               onClick={(e) => {
@@ -223,8 +251,8 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
             }
 
             const cardAspectClass = isLandscape
-              ? 'w-[92vw] max-w-4xl max-h-[75vh] aspect-[16/9]'
-              : 'w-[300px] sm:w-[380px] max-h-[82vh] h-full aspect-[9/16]';
+              ? 'w-[95vw] max-w-5xl max-h-[82vh] aspect-[16/9]'
+              : 'w-[300px] sm:w-[380px] max-h-[84vh] h-full aspect-[9/16]';
 
             return (
               <motion.div
@@ -253,14 +281,16 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
                   zIndex: zIndex
                 }}
               >
-                {/* Reel Video displayed in 100% original aspect ratio without side cutting */}
+                {/* Reel Video displayed in 100% original aspect ratio with Hardware Contrast Optimization */}
                 <video
                   ref={isCurrent ? videoRef : null}
                   src={work.video}
                   autoPlay={true}
                   loop={true}
+                  preload="auto"
                   muted={isCurrent ? isMuted : true}
                   playsInline={true}
+                  style={{ imageRendering: '-webkit-optimize-contrast', transform: 'translate3d(0, 0, 0)' }}
                   onClick={isCurrent ? togglePlayPause : undefined}
                   className={`absolute inset-0 w-full h-full object-contain ${
                     isCurrent ? 'cursor-pointer' : 'pointer-events-none'
@@ -298,14 +328,33 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
                     </div>
                   </div>
 
-                  <span className="glass-pill px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white/80 bg-white/10 border-white/20">
-                    {work.views}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="glass-pill px-2 py-0.5 rounded-full text-[8.5px] font-mono font-bold text-[#E2D9F3] bg-black/60 border border-[#8B7CA8]/40 backdrop-blur-md">
+                      {work.qualityBadge || (work.aspectRatio === '16/9' ? '4K UHD • 60FPS' : '1080P • 60FPS')}
+                    </span>
+                    <span className="glass-pill px-2.5 py-0.5 rounded-full text-[10px] font-bold text-white/80 bg-white/10 border-white/20">
+                      {work.views}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Right Action Rail (Only visible on active reel) */}
                 {isCurrent && (
                   <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-4">
+                    {/* Cinema Fullscreen Action */}
+                    <button
+                      onClick={toggleFullscreen}
+                      className="flex flex-col items-center gap-1 text-white hover:scale-110 active:scale-95 transition-transform"
+                      title="Cinema Fullscreen (F)"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                      </div>
+                      <span className="text-[9px] font-semibold text-white/90">Cinema</span>
+                    </button>
+
                     {/* Like Button */}
                     <button
                       onClick={() => toggleLike(work.id)}

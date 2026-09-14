@@ -11,6 +11,7 @@ export const photoWorks = [
     image: "/Works/Cake.png",
     imageWebp: "/Works/Cake.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Sensory macro food photography capturing artisanal confectionary textures, layered sponge crusts, and delicate dusting."
   },
@@ -22,6 +23,7 @@ export const photoWorks = [
     image: "/Works/Kunafa Dream Cake.jpeg",
     imageWebp: "/Works/Kunafa Dream Cake.webp",
     aspect: "1/1",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "High-contrast culinary catalog photography highlighting golden crispy vermicelli, infused pistachio cream, and delicate syrup sheen."
   },
@@ -33,6 +35,7 @@ export const photoWorks = [
     image: "/Works/Pasta.png",
     imageWebp: "/Works/Pasta.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2024",
     desc: "Warm daylight editorial framing focusing on fresh durum flour dough ribbons, rich pomodoro reduction, and shaved parmigiano."
   },
@@ -44,6 +47,7 @@ export const photoWorks = [
     image: "/Works/Chicken.png",
     imageWebp: "/Works/Chicken.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Deep roasted golden skin with fresh rosemary and thyme aromatics, styled with dark slate table reflections."
   },
@@ -55,6 +59,7 @@ export const photoWorks = [
     image: "/Works/Prawn.png",
     imageWebp: "/Works/Prawn.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Vibrant coastal seafood gastronomy with citrus zest, garlic butter glaze, and sizzling cast-iron char."
   },
@@ -66,6 +71,7 @@ export const photoWorks = [
     image: "/Works/Cheese balls.png",
     imageWebp: "/Works/Cheese balls.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2024",
     desc: "Textured panko breadcrumb crunch with molten artisan cheese center, captured in high-shutter freeze motion."
   },
@@ -77,6 +83,7 @@ export const photoWorks = [
     image: "/Works/Chicken Lollipop.png",
     imageWebp: "/Works/Chicken Lollipop.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Caramelized soy-chili glaze, toasted white sesame seeds, and fresh scallion curls staged for luxury takeaway menus."
   },
@@ -88,6 +95,7 @@ export const photoWorks = [
     image: "/Works/Lollipop.png",
     imageWebp: "/Works/Lollipop.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Dynamic appetizer styling engineered for high-converting delivery app banners and Instagram promotional carousels."
   },
@@ -99,6 +107,7 @@ export const photoWorks = [
     image: "/Works/Wrap.png",
     imageWebp: "/Works/Wrap.webp",
     aspect: "4/5",
+    resolution: "3840px (4K UHD)",
     year: "2024",
     desc: "Fresh garden greens, charred flatbread grill marks, and layered house sauces in tactile close-up."
   },
@@ -110,6 +119,7 @@ export const photoWorks = [
     image: "/Works/WRAPPED.png",
     imageWebp: "/Works/WRAPPED.webp",
     aspect: "16/9",
+    resolution: "3840px (4K UHD)",
     year: "2025",
     desc: "Corporate marketing wrap still combining brand typography, clean paper texture, and Scandinavian minimalism."
   }
@@ -326,10 +336,15 @@ export default function ZigzagGallery() {
                   
                   {/* Top Pill Tags */}
                   <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
-                    <span className="glass-pill px-3 py-1 rounded-full text-[9px] uppercase tracking-[0.2em] font-bold text-white bg-black/40 border-white/20 backdrop-blur-md">
-                      {item.category}
-                    </span>
-                    <span className="glass-pill px-2.5 py-0.5 rounded-full text-[9px] font-mono text-white/90 bg-black/40 border-white/20">
+                    <div className="flex items-center gap-1.5">
+                      <span className="glass-pill px-3 py-1 rounded-full text-[9px] uppercase tracking-[0.2em] font-bold text-white bg-black/45 border-white/20 backdrop-blur-md">
+                        {item.category}
+                      </span>
+                      <span className="glass-pill px-2 py-0.5 rounded-full text-[8px] font-mono font-bold text-[#E2D9F3] bg-black/55 border-[#8B7CA8]/40 backdrop-blur-md">
+                        4K UHD
+                      </span>
+                    </div>
+                    <span className="glass-pill px-2.5 py-0.5 rounded-full text-[9px] font-mono text-white/90 bg-black/45 border-white/20">
                       {item.year}
                     </span>
                   </div>
@@ -371,7 +386,7 @@ export default function ZigzagGallery() {
             <span>Navigate flight trajectory</span>
           </span>
           <span>&bull;</span>
-          <span>Click active still to zoom in high-definition</span>
+          <span>Click active still to inspect 4K Ultra-HD resolution</span>
         </div>
 
       </div>
@@ -404,7 +419,7 @@ export default function ZigzagGallery() {
                 </svg>
               </button>
 
-              {/* Main Image Frame with WebP support */}
+              {/* Main Image Frame with WebP support & Crisp Contrast Rendering */}
               <div className="w-full md:w-3/5 h-full max-h-[60vh] md:max-h-[75vh] flex items-center justify-center rounded-2xl overflow-hidden bg-black/5">
                 <picture className="w-full h-full flex items-center justify-center">
                   <source type="image/webp" srcSet={lightboxImage.imageWebp || lightboxImage.image} />
@@ -412,6 +427,7 @@ export default function ZigzagGallery() {
                     src={lightboxImage.image}
                     alt={lightboxImage.title}
                     className="w-full h-full object-contain max-h-[75vh]"
+                    style={{ imageRendering: '-webkit-optimize-contrast' }}
                     decoding="async"
                   />
                 </picture>
@@ -420,9 +436,12 @@ export default function ZigzagGallery() {
               {/* Details & Production Notes */}
               <div className="w-full md:w-2/5 p-4 sm:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
                     <span className="glass-pill px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold text-[#8B7CA8] bg-white">
                       {lightboxImage.category}
+                    </span>
+                    <span className="glass-pill px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold text-[#6D5A8E] bg-[#8B7CA8]/15 border border-[#8B7CA8]/30">
+                      4K UHD MASTER
                     </span>
                     <span className="text-xs font-mono text-[#1F1929]/50">
                       {lightboxImage.year}
@@ -439,6 +458,10 @@ export default function ZigzagGallery() {
 
                   <div className="space-y-2 text-xs text-[#1F1929]/70 pt-4 border-t border-[#1F1929]/10">
                     <div className="flex justify-between">
+                      <span className="uppercase tracking-widest text-[10px] text-[#8B7CA8]">Resolution</span>
+                      <span className="font-mono font-bold text-[#1F1929]">3840px (Ultra-HD 4K)</span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="uppercase tracking-widest text-[10px] text-[#8B7CA8]">Client</span>
                       <span className="font-semibold text-[#1F1929]">{lightboxImage.client}</span>
                     </div>
@@ -453,7 +476,18 @@ export default function ZigzagGallery() {
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-[#1F1929]/10 flex items-center justify-between">
+                <div className="mt-8 pt-6 border-t border-[#1F1929]/10 flex flex-col gap-2.5">
+                  <a
+                    href={lightboxImage.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 rounded-full bg-white border border-[#1F1929]/15 text-[#1F1929] text-xs font-bold uppercase tracking-[0.15em] text-center hover:bg-[#1F1929] hover:text-white transition-all shadow-sm flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span>View Raw 4K Image (3840px)</span>
+                  </a>
                   <a
                     href="#contact"
                     onClick={() => setLightboxImage(null)}
