@@ -1,11 +1,36 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import WorksCarousel from './components/WorksCarousel';
-import ZigzagGallery from './components/ZigzagGallery';
-import Methodology from './components/Methodology';
-import PricingCards from './components/PricingCards';
-import Contact from './components/Contact';
+
+const SectionSkeleton = ({ height = "h-96" }) => (
+  <div className={`w-full max-w-7xl mx-auto px-6 py-16 flex items-center justify-center ${height}`}>
+    <div className="w-full h-full rounded-[2.5rem] glass-card bg-white/40 border border-white/60 animate-pulse flex flex-col items-center justify-center gap-4">
+      <div className="w-10 h-10 rounded-full bg-[#8B7CA8]/20" />
+      <div className="w-44 h-3.5 rounded-full bg-[#8B7CA8]/15" />
+    </div>
+  </div>
+);
+
+const WorksCarousel = dynamic(() => import('./components/WorksCarousel'), {
+  loading: () => <SectionSkeleton height="h-[600px]" />,
+});
+
+const ZigzagGallery = dynamic(() => import('./components/ZigzagGallery'), {
+  loading: () => <SectionSkeleton height="h-[650px]" />,
+});
+
+const Methodology = dynamic(() => import('./components/Methodology'), {
+  loading: () => <SectionSkeleton height="h-[500px]" />,
+});
+
+const PricingCards = dynamic(() => import('./components/PricingCards'), {
+  loading: () => <SectionSkeleton height="h-[550px]" />,
+});
+
+const Contact = dynamic(() => import('./components/Contact'), {
+  loading: () => <SectionSkeleton height="h-[500px]" />,
+});
 
 export default function Home() {
   const currentYear = new Date().getFullYear();

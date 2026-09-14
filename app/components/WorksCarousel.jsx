@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import ReelsModal from './ReelsModal';
+import dynamic from 'next/dynamic';
+
+const ReelsModal = dynamic(() => import('./ReelsModal'), {
+  ssr: false,
+  loading: () => null
+});
 
 export const worksData = [
   {
@@ -37,7 +42,7 @@ export const worksData = [
 ];
 
 // Subcomponent for Video Card with In-View Scroll Autoplay, Creative Subtle Tilt, and Zero Fog
-function VideoCard({ work, index, isEven, onOpenModal }) {
+const VideoCard = React.memo(function VideoCard({ work, index, isEven, onOpenModal }) {
   const cardRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -95,6 +100,7 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
         <video
           ref={videoRef}
           src={work.video}
+          preload="metadata"
           loop
           muted
           playsInline
@@ -148,7 +154,7 @@ function VideoCard({ work, index, isEven, onOpenModal }) {
       </div>
     </div>
   );
-}
+});
 
 export default function WorksCarousel() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -465,6 +471,7 @@ export default function WorksCarousel() {
                 >
                   <video
                     src={work.video}
+                    preload="metadata"
                     loop
                     muted
                     playsInline

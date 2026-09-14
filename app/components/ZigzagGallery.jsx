@@ -9,6 +9,7 @@ export const photoWorks = [
     client: "Le Botaniste Bakery",
     category: "Culinary Styling",
     image: "/Works/Cake.png",
+    imageWebp: "/Works/Cake.webp",
     aspect: "4/5",
     year: "2025",
     desc: "Sensory macro food photography capturing artisanal confectionary textures, layered sponge crusts, and delicate dusting."
@@ -19,6 +20,7 @@ export const photoWorks = [
     client: "Eastern Confections",
     category: "Menu Editorial",
     image: "/Works/Kunafa Dream Cake.jpeg",
+    imageWebp: "/Works/Kunafa Dream Cake.webp",
     aspect: "1/1",
     year: "2025",
     desc: "High-contrast culinary catalog photography highlighting golden crispy vermicelli, infused pistachio cream, and delicate syrup sheen."
@@ -29,6 +31,7 @@ export const photoWorks = [
     client: "Trattoria Della Spiga",
     category: "Commercial Still",
     image: "/Works/Pasta.png",
+    imageWebp: "/Works/Pasta.webp",
     aspect: "4/5",
     year: "2024",
     desc: "Warm daylight editorial framing focusing on fresh durum flour dough ribbons, rich pomodoro reduction, and shaved parmigiano."
@@ -39,6 +42,7 @@ export const photoWorks = [
     client: "Nord Gastronomy",
     category: "Luxury Dining",
     image: "/Works/Chicken.png",
+    imageWebp: "/Works/Chicken.webp",
     aspect: "4/5",
     year: "2025",
     desc: "Deep roasted golden skin with fresh rosemary and thyme aromatics, styled with dark slate table reflections."
@@ -49,6 +53,7 @@ export const photoWorks = [
     client: "Harbor Club Seafood",
     category: "Commercial Still",
     image: "/Works/Prawn.png",
+    imageWebp: "/Works/Prawn.webp",
     aspect: "4/5",
     year: "2025",
     desc: "Vibrant coastal seafood gastronomy with citrus zest, garlic butter glaze, and sizzling cast-iron char."
@@ -59,6 +64,7 @@ export const photoWorks = [
     client: "Bistrot Moderne",
     category: "Appetizer Series",
     image: "/Works/Cheese balls.png",
+    imageWebp: "/Works/Cheese balls.webp",
     aspect: "4/5",
     year: "2024",
     desc: "Textured panko breadcrumb crunch with molten artisan cheese center, captured in high-shutter freeze motion."
@@ -69,6 +75,7 @@ export const photoWorks = [
     client: "Umami Table",
     category: "Culinary Styling",
     image: "/Works/Chicken Lollipop.png",
+    imageWebp: "/Works/Chicken Lollipop.webp",
     aspect: "4/5",
     year: "2025",
     desc: "Caramelized soy-chili glaze, toasted white sesame seeds, and fresh scallion curls staged for luxury takeaway menus."
@@ -79,6 +86,7 @@ export const photoWorks = [
     client: "Nord Media House",
     category: "Commercial Shoot",
     image: "/Works/Lollipop.png",
+    imageWebp: "/Works/Lollipop.webp",
     aspect: "4/5",
     year: "2025",
     desc: "Dynamic appetizer styling engineered for high-converting delivery app banners and Instagram promotional carousels."
@@ -89,6 +97,7 @@ export const photoWorks = [
     client: "Roll & Gather",
     category: "Packaging & Stills",
     image: "/Works/Wrap.png",
+    imageWebp: "/Works/Wrap.webp",
     aspect: "4/5",
     year: "2024",
     desc: "Fresh garden greens, charred flatbread grill marks, and layered house sauces in tactile close-up."
@@ -99,6 +108,7 @@ export const photoWorks = [
     client: "Nord Creative Studio",
     category: "Brand Campaign",
     image: "/Works/WRAPPED.png",
+    imageWebp: "/Works/WRAPPED.webp",
     aspect: "16/9",
     year: "2025",
     desc: "Corporate marketing wrap still combining brand typography, clean paper texture, and Scandinavian minimalism."
@@ -300,14 +310,18 @@ export default function ZigzagGallery() {
                   zIndex: zIndex
                 }}
               >
-                {/* Photo Image Frame */}
-                <div className="relative w-full h-[78%] rounded-[1.8rem] overflow-hidden bg-black/5">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    loading="lazy"
-                  />
+                {/* Photo Image Frame with Skeleton Backdrop */}
+                <div className="relative w-full h-[78%] rounded-[1.8rem] overflow-hidden bg-gradient-to-tr from-[#1F1929]/5 via-[#8B7CA8]/10 to-[#1F1929]/5">
+                  <picture className="w-full h-full block">
+                    <source type="image/webp" srcSet={item.imageWebp || item.image} />
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
                   
                   {/* Top Pill Tags */}
@@ -390,13 +404,17 @@ export default function ZigzagGallery() {
                 </svg>
               </button>
 
-              {/* Main Image Frame */}
+              {/* Main Image Frame with WebP support */}
               <div className="w-full md:w-3/5 h-full max-h-[60vh] md:max-h-[75vh] flex items-center justify-center rounded-2xl overflow-hidden bg-black/5">
-                <img
-                  src={lightboxImage.image}
-                  alt={lightboxImage.title}
-                  className="w-full h-full object-contain max-h-[75vh]"
-                />
+                <picture className="w-full h-full flex items-center justify-center">
+                  <source type="image/webp" srcSet={lightboxImage.imageWebp || lightboxImage.image} />
+                  <img
+                    src={lightboxImage.image}
+                    alt={lightboxImage.title}
+                    className="w-full h-full object-contain max-h-[75vh]"
+                    decoding="async"
+                  />
+                </picture>
               </div>
 
               {/* Details & Production Notes */}
