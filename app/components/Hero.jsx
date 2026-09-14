@@ -1,161 +1,342 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import Magnetic from "./Magnetic";
+
+// Custom animation variants for Awwwards-style masked line reveals
+const lineMaskContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const maskLineChild = {
+  hidden: { y: "115%", opacity: 0 },
+  visible: {
+    y: "0%",
+    opacity: 1,
+    transition: {
+      duration: 1.15,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
 
 export default function Hero() {
+  const containerRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isStarHovered, setIsStarHovered] = useState(false);
+
+  // Parallax on scroll using Framer Motion
+  const { scrollY } = useScroll();
+  const rawYParallax = useTransform(scrollY, [0, 800], [0, 160]);
+  const yParallax = useSpring(rawYParallax, { damping: 20, stiffness: 100 });
+
+  // Mouse tilt tracking for the central compass star
+  useEffect(() => {
+    const handlePointerMove = (e) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 2;
+      const y = (e.clientY / innerHeight - 0.5) * 2;
+      setMousePosition({ x, y });
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", handlePointerMove);
+  }, []);
+
   const metrics = [
-    { value: "4.8x", label: "Average ROAS", detail: "Meta Ads Performance" },
-    { value: "12M+", label: "Reel Views", detail: "Organic Social Reach" },
-    { value: "100%", label: "Client Retention", detail: "Active Retainers" },
-    { value: "0° N", label: "Directional Compass", detail: "Strategic Alignment" },
+    { value: "4.8x", label: "Average ROAS", detail: "Meta Ads & Paid Growth" },
+    { value: "14M+", label: "Organic Views", detail: "High-Retention Reels" },
+    { value: "100%", label: "Partner Retention", detail: "Active Retainers" },
+    { value: "0° N", label: "True Bearing", detail: "Directional Strategy" },
   ];
 
-  const [isWordHovered, setIsWordHovered] = React.useState(false);
-
   return (
-    <section className="relative min-h-[92vh] md:min-h-screen flex flex-col justify-between pt-28 pb-12 px-6 overflow-hidden">
-      {/* Ambient background soft glow orbs */}
-      <div className="absolute top-1/4 left-1/5 w-72 md:w-[480px] h-72 md:h-[480px] bg-[#BBA9D0]/20 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/5 w-80 md:w-[500px] h-80 md:h-[500px] bg-[#8B7CA8]/15 rounded-full blur-[140px] pointer-events-none" />
+    <section
+      ref={containerRef}
+      className="relative min-h-screen w-full flex flex-col justify-between pt-24 pb-12 px-6 sm:px-10 lg:px-16 overflow-hidden bg-[#FAF7F2] select-none"
+    >
+      {/* Ambient background lighting with the logo's deep plum hue */}
+      <div 
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[-10%] left-1/2 -translate-x-1/2 w-[720px] h-[520px] bg-gradient-to-b from-[#3D1550]/10 via-[#22092C]/5 to-transparent rounded-full blur-[140px]"
+      />
+      <div 
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-1/4 -right-24 w-[480px] h-[480px] bg-[#8B7CA8]/10 rounded-full blur-[160px]"
+      />
 
-      <div className="max-w-5xl mx-auto w-full flex-1 flex flex-col items-center justify-center text-center relative z-10 my-auto">
-        
-        {/* Editorial Sub-badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="glass-pill px-5 py-1.5 rounded-full mb-6 inline-flex items-center gap-3 bg-white/60 border-white/60 shadow-[0_4px_20px_rgba(139,124,168,0.12)]"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#8B7CA8] animate-ping" />
-          <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-[#1F1929]/80">
-            Directional Creative Studio
+      {/* Top Editorial Status & Coordinate Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        className="w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#22092C]/10 pb-4 text-[11px] uppercase tracking-[0.22em] text-[#22092C]/70"
+      >
+        <div className="flex items-center gap-3">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3D1550] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22092C]" />
           </span>
-          <span className="w-[1px] h-3 bg-[#1F1929]/15" />
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#8B7CA8] font-medium">
-            2026 Collection
-          </span>
-        </motion.div>
-
-        {/* Hero Title with Dynamic Blur-to-Clear & Expansion on Hover */}
-        <div 
-          className="relative my-2 select-none cursor-pointer group py-2"
-          onMouseEnter={() => setIsWordHovered(true)}
-          onMouseLeave={() => setIsWordHovered(false)}
-          onTouchStart={() => setIsWordHovered(prev => !prev)}
-        >
-          {/* Ambient Glow behind NORD on hover */}
-          <motion.div 
-            animate={{
-              opacity: isWordHovered ? 0.6 : 0.2,
-              scale: isWordHovered ? 1.2 : 0.9,
-            }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-gradient-to-r from-[#8B7CA8]/30 via-[#BBA9D0]/30 to-[#8B7CA8]/30 rounded-full blur-2xl -z-10 pointer-events-none"
-          />
-
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
-            animate={{ 
-              opacity: isWordHovered ? 1 : 0.78, 
-              scale: isWordHovered ? 1.12 : 0.96,
-              filter: isWordHovered ? "blur(0px)" : "blur(10px)",
-              y: 0
-            }}
-            transition={{ 
-              duration: 0.55, 
-              ease: [0.16, 1, 0.3, 1] 
-            }}
-            className="text-7xl sm:text-9xl md:text-[13rem] font-serif font-black tracking-tight leading-none uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#1F1929] via-[#352B46] to-[#8B7CA8] transition-all duration-300 drop-shadow-sm"
-          >
-            NORD
-          </motion.h1>
-          
-          {/* Frosted Glass Overlay Bar */}
-          <motion.div 
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ 
-              width: isWordHovered ? "122%" : "115%", 
-              opacity: isWordHovered ? 0.95 : 0.65,
-              scale: isWordHovered ? 1.05 : 1
-            }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-14 sm:h-20 md:h-28 bg-white/40 backdrop-blur-xl rounded-full border border-white/80 shadow-[0_16px_36px_rgba(139,124,168,0.25)] pointer-events-none flex items-center justify-between px-6 sm:px-10 transition-all duration-300"
-          >
-            <span className="text-[9px] sm:text-[11px] tracking-[0.3em] uppercase text-[#1F1929]/70 font-semibold hidden sm:inline">
-              Nordic Aesthetic
-            </span>
-            
-            {/* Interactive Hover Pill Hint */}
-            <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase px-3 py-1 rounded-full bg-white/70 border border-white text-[#8B7CA8] font-bold shadow-sm">
-              {isWordHovered ? "Direction Clear" : "Hover To Focus"}
-            </span>
-
-            <span className="text-[9px] sm:text-[11px] tracking-[0.3em] uppercase text-[#1F1929]/70 font-semibold hidden sm:inline">
-              Short-Form Velocity
-            </span>
-          </motion.div>
+          <span className="font-semibold text-[#22092C]">Available For Commissions</span>
+          <span className="text-[#22092C]/30">&bull;</span>
+          <span className="text-[#22092C]/60">Q2 2026</span>
         </div>
 
-        {/* Narrative Description */}
-        <motion.p 
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          className="mt-6 text-[#1F1929]/75 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal"
-        >
-          We merge Scandinavian visual restraint with high-octane social strategy — crafting viral short-form reels, high-converting Meta Ads campaigns, and unforgettable brand identities.
-        </motion.p>
+        <div className="flex items-center gap-6 hidden md:flex font-mono text-[10px] tracking-[0.25em] text-[#22092C]/60">
+          <span>64°08&apos; N &bull; REYKJAVIK</span>
+          <span>&mdash;</span>
+          <span>11°00&apos; N &bull; COIMBATORE</span>
+        </div>
 
-        {/* Action Buttons */}
+        <div className="tracking-[0.24em] font-medium text-[10px]">
+          DIRECTIONAL CREATIVE STUDIO
+        </div>
+      </motion.div>
+
+      {/* Main Hero Typography & Brand Anchor */}
+      <motion.div
+        style={{ y: yParallax }}
+        className="w-full max-w-7xl mx-auto my-auto py-12 lg:py-16 flex flex-col items-center justify-center text-center relative z-10"
+      >
+        {/* Category Pill */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.65 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-4"
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="nord-pill px-5 py-1.5 rounded-full mb-8 inline-flex items-center gap-3.5"
         >
-          <a
-            href="#works"
-            className="px-7 py-3.5 rounded-full bg-[#1F1929] text-white text-xs uppercase tracking-[0.2em] font-bold shadow-lg shadow-[#1F1929]/15 hover:bg-[#8B7CA8] hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
-          >
-            <span>Explore Works</span>
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </a>
-
-          <a
-            href="#pricing"
-            className="glass-card px-7 py-3.5 rounded-full text-[#1F1929] text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-all flex items-center gap-2"
-          >
-            <span>Rate Card & Retainers</span>
-            <span className="text-xs text-[#8B7CA8]">&rarr;</span>
-          </a>
+          <span className="text-[10px] sm:text-[11px] font-sans font-bold uppercase tracking-[0.28em] text-[#22092C]">
+            Cinematic Reels &bull; Brand Architecture &bull; Paid Media
+          </span>
         </motion.div>
 
-      </div>
-
-      {/* Studio Proof Metrics Bar */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.85, duration: 0.8 }}
-        className="max-w-4xl mx-auto w-full relative z-10 pt-8"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {metrics.map((item, idx) => (
-            <div 
-              key={idx}
-              className="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center bg-white/60 border-white/60 group hover:border-[#8B7CA8]/40"
+        {/* Central Brand Headline: Masked Line Reveal */}
+        <motion.div
+          variants={lineMaskContainer}
+          initial="hidden"
+          animate="visible"
+          className="w-full flex flex-col items-center justify-center"
+        >
+          {/* Masked Line 1: NORD Master Wordmark with 8-Point Compass Star */}
+          <div className="mask-line-container overflow-hidden py-1">
+            <motion.div
+              variants={maskLineChild}
+              className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6"
             >
-              <div className="font-serif text-2xl sm:text-3xl font-bold text-[#1F1929] group-hover:text-[#8B7CA8] transition-colors">
-                {item.value}
+              {/* N */}
+              <span className="font-serif text-7xl sm:text-9xl md:text-[12rem] lg:text-[15rem] font-bold tracking-tight text-[#22092C] leading-none select-none">
+                N
+              </span>
+
+              {/* The Iconic 8-Point Compass Star ("O") with Mouse Tilt & Magnetic Interaction */}
+              <motion.div
+                onMouseEnter={() => setIsStarHovered(true)}
+                onMouseLeave={() => setIsStarHovered(false)}
+                animate={{
+                  rotate: isStarHovered ? 180 : mousePosition.x * 24,
+                  scale: isStarHovered ? 1.08 : 1,
+                }}
+                transition={{
+                  rotate: { duration: isStarHovered ? 0.8 : 0.4, ease: [0.16, 1, 0.3, 1] },
+                  scale: { duration: 0.3 },
+                }}
+                className="relative w-16 h-16 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 flex items-center justify-center cursor-pointer my-auto"
+                data-cursor-label="0° N"
+              >
+                <svg
+                  viewBox="0 0 100 100"
+                  className="w-full h-full drop-shadow-md overflow-visible"
+                >
+                  {/* Outer circle rings */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="46"
+                    stroke="#22092C"
+                    strokeWidth="2"
+                    fill="none"
+                    opacity="0.85"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="38"
+                    stroke="#22092C"
+                    strokeWidth="1"
+                    strokeDasharray="3 4"
+                    fill="none"
+                    opacity="0.5"
+                  />
+
+                  {/* 8-Point Compass Star Geometry (Exact Logo DNA) */}
+                  {/* Primary North Spike */}
+                  <polygon
+                    points="50,-8 55,34 50,44 45,34"
+                    fill="#22092C"
+                  />
+                  {/* Primary South Spike */}
+                  <polygon
+                    points="50,108 55,66 50,56 45,66"
+                    fill="#22092C"
+                  />
+                  {/* Primary East Spike */}
+                  <polygon
+                    points="108,50 66,55 56,50 66,45"
+                    fill="#22092C"
+                  />
+                  {/* Primary West Spike */}
+                  <polygon
+                    points="-8,50 34,55 44,50 34,45"
+                    fill="#22092C"
+                  />
+
+                  {/* Diagonal Points */}
+                  <polygon
+                    points="82,18 60,42 50,50 56,38"
+                    fill="#22092C"
+                    opacity="0.85"
+                  />
+                  <polygon
+                    points="82,82 60,58 50,50 56,62"
+                    fill="#22092C"
+                    opacity="0.85"
+                  />
+                  <polygon
+                    points="18,82 40,58 50,50 44,62"
+                    fill="#22092C"
+                    opacity="0.85"
+                  />
+                  <polygon
+                    points="18,18 40,42 50,50 44,38"
+                    fill="#22092C"
+                    opacity="0.85"
+                  />
+
+                  {/* Center precision aperture */}
+                  <circle cx="50" cy="50" r="3.5" fill="#FAF7F2" />
+                </svg>
+              </motion.div>
+
+              {/* R */}
+              <span className="font-serif text-7xl sm:text-9xl md:text-[12rem] lg:text-[15rem] font-bold tracking-tight text-[#22092C] leading-none select-none">
+                R
+              </span>
+
+              {/* D */}
+              <span className="font-serif text-7xl sm:text-9xl md:text-[12rem] lg:text-[15rem] font-bold tracking-tight text-[#22092C] leading-none select-none">
+                D
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Sub-Mark: MEDIA HOUSE (Extreme tracking from logo) */}
+          <div className="mask-line-container overflow-hidden pt-1 pb-4">
+            <motion.p
+              variants={maskLineChild}
+              className="text-xs sm:text-base md:text-xl font-sans font-semibold uppercase tracking-[0.55em] sm:tracking-[0.72em] text-[#22092C] pl-2 sm:pl-3"
+            >
+              MEDIA HOUSE
+            </motion.p>
+          </div>
+
+          {/* Masked Editorial Headline: Bold Grotesque Line by Line */}
+          <div className="mask-line-container overflow-hidden mt-6">
+            <motion.h2
+              variants={maskLineChild}
+              className="font-syne text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-[-0.03em] text-[#22092C] leading-[1.08] max-w-4xl"
+            >
+              WE ENGINEER SHORT-FORM VELOCITY
+            </motion.h2>
+          </div>
+
+          <div className="mask-line-container overflow-hidden mt-1">
+            <motion.h2
+              variants={maskLineChild}
+              className="font-syne text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-[-0.03em] text-[#22092C]/40 leading-[1.08] max-w-4xl"
+            >
+              WITH SCANDINAVIAN RESTRAINT
+            </motion.h2>
+          </div>
+        </motion.div>
+
+        {/* Narrative Manifesto Paragraph */}
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 text-[#22092C]/75 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal"
+        >
+          Nord Media House is a directional creative studio. We unite high-craft cinematography with algorithmic precision &mdash; crafting viral short-form reels, bespoke brand identities, and high-performance Meta Ad architectures.
+        </motion.p>
+
+        {/* Physics-driven Magnetic Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-5 relative z-20"
+        >
+          <Magnetic strength={0.28}>
+            <a
+              href="#works"
+              data-cursor-label="VIEW"
+              className="group relative inline-flex items-center gap-4 px-8 py-4 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs uppercase tracking-[0.22em] font-bold overflow-hidden shadow-[0_16px_36px_rgba(34,9,44,0.22)] hover:shadow-[0_22px_48px_rgba(34,9,44,0.35)] transition-all duration-300"
+            >
+              <span className="relative z-10">Explore Selected Works</span>
+              <span className="relative z-10 w-2 h-2 rounded-full bg-[#FAF7F2] group-hover:scale-150 transition-transform duration-300" />
+            </a>
+          </Magnetic>
+
+          <Magnetic strength={0.28}>
+            <a
+              href="#contact"
+              data-cursor-hover="true"
+              className="nord-glass inline-flex items-center gap-3 px-8 py-4 rounded-full text-[#22092C] text-xs uppercase tracking-[0.22em] font-bold hover:border-[#22092C]/40 transition-all duration-300"
+            >
+              <span>Initiate Commission</span>
+              <span className="text-[#3D1550]">&rarr;</span>
+            </a>
+          </Magnetic>
+        </motion.div>
+      </motion.div>
+
+      {/* Editorial Credibility Deck / Metric Pillars */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.0, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-7xl mx-auto pt-6 border-t border-[#22092C]/10 relative z-10"
+      >
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {metrics.map((item, index) => (
+            <div
+              key={index}
+              className="nord-glass p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[#22092C]/30"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#22092C]/50">
+                  [ 0{index + 1} ]
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#22092C]/20 group-hover:bg-[#22092C] transition-colors" />
               </div>
-              <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-[#1F1929]/80 mt-1">
-                {item.label}
-              </div>
-              <div className="text-[9px] text-[#1F1929]/50 tracking-wider hidden sm:block mt-0.5">
-                {item.detail}
+
+              <div className="mt-4">
+                <div className="font-syne text-3xl sm:text-4xl font-extrabold text-[#22092C] tracking-tight group-hover:translate-x-1 transition-transform">
+                  {item.value}
+                </div>
+                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#22092C] mt-1">
+                  {item.label}
+                </div>
+                <div className="text-[10px] text-[#22092C]/60 tracking-wider mt-0.5 font-normal">
+                  {item.detail}
+                </div>
               </div>
             </div>
           ))}
