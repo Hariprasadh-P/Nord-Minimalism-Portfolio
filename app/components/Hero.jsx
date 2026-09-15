@@ -62,7 +62,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen w-full flex flex-col justify-between pt-24 pb-12 px-6 sm:px-10 lg:px-16 overflow-hidden bg-[#FAF7F2] select-none"
+      className="relative w-full flex flex-col pt-24 sm:pt-28 pb-16 px-6 sm:px-10 lg:px-16 overflow-hidden bg-[#FAF7F2] select-none"
     >
       {/* Ambient background lighting with the logo's deep plum hue */}
       <div 
@@ -103,10 +103,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Main Hero Typography & Brand Anchor */}
-      <motion.div
-        style={{ y: yParallax }}
-        className="w-full max-w-7xl mx-auto my-auto py-12 lg:py-16 flex flex-col items-center justify-center text-center relative z-10"
-      >
+      <div className="w-full max-w-7xl mx-auto py-8 sm:py-12 mb-8 sm:mb-12 flex flex-col items-center justify-center text-center relative z-10">
         {/* Category Pill */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
@@ -264,41 +261,44 @@ export default function Hero() {
 
         {/* Physics-driven Magnetic Action Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-5 relative z-20"
+          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 mb-4 flex flex-wrap items-center justify-center gap-5 relative z-20"
         >
-          <Magnetic strength={0.28}>
+          <Magnetic strength={0.25}>
             <a
               href="#works"
               data-cursor-label="VIEW"
-              className="group relative inline-flex items-center gap-4 px-8 py-4 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs uppercase tracking-[0.22em] font-bold overflow-hidden shadow-[0_16px_36px_rgba(34,9,44,0.22)] hover:shadow-[0_22px_48px_rgba(34,9,44,0.35)] transition-all duration-300"
+              style={{ backgroundColor: "#22092C", color: "#FAF7F2" }}
+              className="group relative inline-flex items-center gap-3.5 px-8 py-4 rounded-full text-xs uppercase tracking-[0.22em] font-bold shadow-[0_16px_36px_rgba(34,9,44,0.25)] hover:shadow-[0_22px_48px_rgba(34,9,44,0.4)] transition-all duration-300 cursor-pointer"
             >
               <span className="relative z-10">Explore Selected Works</span>
               <span className="relative z-10 w-2 h-2 rounded-full bg-[#FAF7F2] group-hover:scale-150 transition-transform duration-300" />
             </a>
           </Magnetic>
 
-          <Magnetic strength={0.28}>
+          <Magnetic strength={0.25}>
             <a
               href="#contact"
               data-cursor-hover="true"
-              className="nord-glass inline-flex items-center gap-3 px-8 py-4 rounded-full text-[#22092C] text-xs uppercase tracking-[0.22em] font-bold hover:border-[#22092C]/40 transition-all duration-300"
+              style={{ backgroundColor: "rgba(250, 247, 242, 0.9)", color: "#22092C" }}
+              className="nord-glass inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.22em] font-bold border border-[#22092C]/20 hover:border-[#22092C]/50 transition-all duration-300 cursor-pointer shadow-sm"
             >
               <span>Initiate Commission</span>
-              <span className="text-[#3D1550]">&rarr;</span>
+              <span className="text-[#3D1550] text-sm">&rarr;</span>
             </a>
           </Magnetic>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Editorial Credibility Deck / Metric Pillars */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.0, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-7xl mx-auto pt-6 border-t border-[#22092C]/10 relative z-10"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-7xl mx-auto pt-10 sm:pt-14 mt-8 border-t border-[#22092C]/10 relative z-10"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {metrics.map((item, index) => (
