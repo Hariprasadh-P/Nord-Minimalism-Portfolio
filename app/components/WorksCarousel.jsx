@@ -95,9 +95,7 @@ const ParallaxProjectCard = ({ work, index, onOpenModal }) => {
     <motion.div
       ref={cardRef}
       style={{ y: parallaxY }}
-      className={`w-full ${
-        isLandscape ? "lg:col-span-12" : "lg:col-span-6"
-      } flex justify-center py-4`}
+      className="w-full flex justify-center py-2"
     >
       <motion.div
         onClick={onOpenModal}
@@ -107,17 +105,13 @@ const ParallaxProjectCard = ({ work, index, onOpenModal }) => {
         }}
         onMouseLeave={() => setIsHovered(false)}
         animate={{
-          skewX: isHovered ? (index % 2 === 0 ? -1.8 : 1.8) : 0,
-          skewY: isHovered ? (index % 2 === 0 ? 1.2 : -1.2) : 0,
-          scale: isHovered ? 1.025 : 1,
-          y: isHovered ? -8 : 0,
+          skewX: isHovered ? (index % 2 === 0 ? -1.5 : 1.5) : 0,
+          skewY: isHovered ? (index % 2 === 0 ? 1 : -1) : 0,
+          scale: isHovered ? 1.02 : 1,
+          y: isHovered ? -6 : 0,
         }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className={`group relative w-full ${
-          isLandscape
-            ? "max-w-4xl aspect-[16/10] sm:aspect-[16/9]"
-            : "max-w-md aspect-[9/16]"
-        } rounded-[2.5rem] overflow-hidden nord-glass cursor-pointer shadow-[0_24px_60px_rgba(34,9,44,0.12)] hover:shadow-[0_36px_85px_rgba(34,9,44,0.25)] border border-[#22092C]/15 bg-[#16041D] select-none`}
+        className="group relative w-full h-[580px] sm:h-[640px] rounded-[2.5rem] overflow-hidden nord-glass cursor-pointer shadow-[0_24px_60px_rgba(34,9,44,0.12)] hover:shadow-[0_36px_85px_rgba(34,9,44,0.25)] border border-[#22092C]/15 bg-[#16041D] select-none flex flex-col justify-between"
       >
         {/* Live Loop Video Layer */}
         <video
@@ -281,7 +275,7 @@ export default function WorksCarousel() {
         </div>
 
         {/* Project Cards Grid with Parallax and Hover Skewing */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-stretch max-w-6xl mx-auto">
           {worksData.map((work, index) => (
             <ParallaxProjectCard
               key={work.id}

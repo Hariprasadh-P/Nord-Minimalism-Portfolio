@@ -2,6 +2,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Magnetic from "./Magnetic";
+import DustAssembleHeadline from "./DustAssembleText";
+import MetricCounterCard from "./MetricCounterCard";
 
 // Custom animation variants for Awwwards-style masked line reveals
 const lineMaskContainer = {
@@ -51,10 +53,10 @@ export default function Hero() {
   }, []);
 
   const metrics = [
-    { value: "4.8x", label: "Average ROAS", detail: "Meta Ads & Paid Growth" },
-    { value: "14M+", label: "Organic Views", detail: "High-Retention Reels" },
-    { value: "100%", label: "Partner Retention", detail: "Active Retainers" },
-    { value: "0° N", label: "True Bearing", detail: "Directional Strategy" },
+    { value: "4.8x", targetNum: 4.8, suffix: "x", decimals: 1, label: "Average ROAS", detail: "Meta Ads & Paid Growth" },
+    { value: "14M+", targetNum: 14, suffix: "M+", decimals: 0, label: "Organic Views", detail: "High-Retention Reels" },
+    { value: "100%", targetNum: 100, suffix: "%", decimals: 0, label: "Partner Retention", detail: "Active Retainers" },
+    { value: "0° N", isCompass: true, label: "True Bearing", detail: "Directional Strategy" },
   ];
 
   return (
@@ -246,24 +248,8 @@ export default function Hero() {
             </motion.p>
           </div>
 
-          {/* Masked Editorial Headline: Bold Grotesque Line by Line */}
-          <div className="mask-line-container overflow-hidden mt-6">
-            <motion.h2
-              variants={maskLineChild}
-              className="font-syne text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-[-0.03em] text-[#22092C] leading-[1.08] max-w-4xl"
-            >
-              WE ENGINEER SHORT-FORM VELOCITY
-            </motion.h2>
-          </div>
-
-          <div className="mask-line-container overflow-hidden mt-1">
-            <motion.h2
-              variants={maskLineChild}
-              className="font-syne text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-[-0.03em] text-[#22092C]/40 leading-[1.08] max-w-4xl"
-            >
-              WITH SCANDINAVIAN RESTRAINT
-            </motion.h2>
-          </div>
+          {/* Scroll-Driven Dust Particle Headline Assembly */}
+          <DustAssembleHeadline />
         </motion.div>
 
         {/* Narrative Manifesto Paragraph */}
@@ -314,31 +300,9 @@ export default function Hero() {
         transition={{ duration: 1.0, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-7xl mx-auto pt-6 border-t border-[#22092C]/10 relative z-10"
       >
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {metrics.map((item, index) => (
-            <div
-              key={index}
-              className="nord-glass p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[#22092C]/30"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#22092C]/50">
-                  [ 0{index + 1} ]
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#22092C]/20 group-hover:bg-[#22092C] transition-colors" />
-              </div>
-
-              <div className="mt-4">
-                <div className="font-syne text-3xl sm:text-4xl font-extrabold text-[#22092C] tracking-tight group-hover:translate-x-1 transition-transform">
-                  {item.value}
-                </div>
-                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#22092C] mt-1">
-                  {item.label}
-                </div>
-                <div className="text-[10px] text-[#22092C]/60 tracking-wider mt-0.5 font-normal">
-                  {item.detail}
-                </div>
-              </div>
-            </div>
+            <MetricCounterCard key={index} item={item} index={index} />
           ))}
         </div>
       </motion.div>

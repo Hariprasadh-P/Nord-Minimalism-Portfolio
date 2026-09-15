@@ -1,22 +1,27 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ReelsModal({ isOpen, onClose, works, activeIndex, setActiveIndex }) {
+  const [mounted, setMounted] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const [likedMap, setLikedMap] = useState({});
   const videoRef = useRef(null);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
 
   // Keyboard controls
@@ -45,7 +50,7 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, activeIndex, works.length]);
 
-  if (!isOpen || !works || works.length === 0) return null;
+  if (!isOpen || !works || works.length === 0 || !mounted) return null;
 
   const handleNext = () => {
     if (activeIndex < works.length - 1) {
@@ -97,14 +102,14 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
     }
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-hidden"
+        className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 overflow-hidden select-none"
         onClick={onClose}
       >
         {/* Top Floating Control Bar */}
@@ -417,6 +422,7 @@ export default function ReelsModal({ isOpen, onClose, works, activeIndex, setAct
           })}
         </div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

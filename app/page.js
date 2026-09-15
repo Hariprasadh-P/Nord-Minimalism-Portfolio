@@ -1,9 +1,7 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Navigation from "./components/Navigation";
-import DimensionalCanvas from "./components/DimensionalCanvas";
 import Hero from "./components/Hero";
 
 const SectionSkeleton = ({ height = "h-96" }) => (
@@ -43,62 +41,32 @@ const Contact = dynamic(() => import("./components/Contact"), {
 
 export default function Home() {
   const currentYear = new Date().getFullYear();
-  // Default to the new 3D Dimension experience per user request
-  const [is3DDimension, setIs3DDimension] = useState(true);
 
   return (
     <main className="min-h-screen bg-[#FAF7F2] text-[#22092C] selection:bg-[#22092C] selection:text-[#FAF7F2] relative overflow-x-hidden">
-      {/* Top Floating Navigation Bar */}
+      {/* Floating Navigation Header */}
       <Navigation />
 
-      {/* Floating Dimension Switcher Pill (Fixed Top-Right) */}
-      <div className="fixed top-20 sm:top-24 right-4 sm:right-8 z-40">
-        <div className="nord-glass p-1 rounded-full flex items-center gap-1 shadow-xl border border-[#22092C]/15 bg-white/90 backdrop-blur-xl">
-          <button
-            onClick={() => setIs3DDimension(true)}
-            className={`px-3.5 py-1.5 rounded-full text-[10px] font-syne font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-              is3DDimension
-                ? "bg-[#22092C] text-[#FAF7F2] shadow-md"
-                : "text-[#22092C]/60 hover:text-[#22092C]"
-            }`}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FAF7F2] animate-pulse" />
-            <span>3D Spatial Dimension</span>
-          </button>
+      {/* Hero Section with Spinning Compass Star & Masked Line Reveal */}
+      <Hero />
 
-          <button
-            onClick={() => setIs3DDimension(false)}
-            className={`px-3.5 py-1.5 rounded-full text-[10px] font-syne font-bold uppercase tracking-wider transition-all ${
-              !is3DDimension
-                ? "bg-[#22092C] text-[#FAF7F2] shadow-md"
-                : "text-[#22092C]/60 hover:text-[#22092C]"
-            }`}
-          >
-            <span>Editorial Scroll</span>
-          </button>
-        </div>
-      </div>
+      {/* Cinematic Video Reels Showcase (Click card to launch Reel Format) */}
+      <WorksCarousel />
 
-      {/* CONDITIONAL RENDER: 3D SPATIAL VOYAGE vs EDITORIAL SCROLL */}
-      {is3DDimension ? (
-        /* ========================================================
-            TRUE 3D SPATIAL VOYAGE (Travel forward into Z-Depth)
-            ======================================================== */
-        <DimensionalCanvas />
-      ) : (
-        /* ========================================================
-            EDITORIAL SCROLL VIEW (The baseline 2D view)
-            ======================================================== */
-        <>
-          <Hero />
-          <WorksCarousel />
-          <ZigzagGallery />
-          <Methodology />
-          <PricingCards />
-          <FAQ />
-          <Contact />
-        </>
-      )}
+      {/* Commercial Photography & Stills Archive (Click to inspect with swipe & arrows) */}
+      <ZigzagGallery />
+
+      {/* 4-Phase Directional Methodology */}
+      <Methodology />
+
+      {/* Compass Retainer Rate Cards */}
+      <PricingCards />
+
+      {/* Frequently Asked Questions */}
+      <FAQ />
+
+      {/* Project Brief & Contact Dispatch Terminal */}
+      <Contact />
 
       {/* Studio Editorial Footer */}
       <footer className="border-t border-[#22092C]/10 pt-20 pb-12 bg-[#FAF7F2] relative z-10 select-none">

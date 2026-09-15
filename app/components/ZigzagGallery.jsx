@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -192,11 +193,26 @@ const ParallaxPhotoCard = ({ photo, index, onSelect }) => {
 };
 
 export default function ZigzagGallery() {
+  const [mounted, setMounted] = useState(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(null);
   const [swipeDirection, setSwipeDirection] = useState(0);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const activePhoto =
     selectedPhotoIndex !== null ? photoWorks[selectedPhotoIndex] : null;
+
+  // Clean scroll lock on modal open
+  useEffect(() => {
+    if (selectedPhotoIndex === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [selectedPhotoIndex]);
 
   const handleNext = useCallback(() => {
     setSwipeDirection(1);
@@ -311,166 +327,194 @@ export default function ZigzagGallery() {
       </div>
 
       {/* ========================================================
-          SWIPEABLE FULLSCREEN PHOTO MODAL WITH ARROWS & DRAG
+          SWIPEABLE FULLSCREEN PHOTO MODAL WITH ARROWS & DRAG (PORTALED)
           ======================================================== */}
-      <AnimatePresence>
-        {activePhoto && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedPhotoIndex(null)}
-            className="fixed inset-0 z-[1050] bg-[#16041D]/92 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-8 select-none"
-          >
-            {/* Top Navigation & Status Bar */}
-            <div className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-8 flex items-center justify-between z-40 pointer-events-none">
-              <div className="flex items-center gap-3 pointer-events-auto">
-                <span className="nord-pill px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#FAF7F2] bg-white/10 border-white/20 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#C7BBD0] animate-pulse" />
-                  <span>STILL ARCHIVE</span>
-                </span>
-                <span className="text-xs text-white/70 tracking-widest font-mono">
-                  0{selectedPhotoIndex + 1} / 0{photoWorks.length}
-                </span>
-              </div>
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {activePhoto && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setSelectedPhotoIndex(null)}
+                style={{ backgroundColor: "rgba(22, 4, 29, 0.98)" }}
+                className="fixed inset-0 z-[99999] backdrop-blur-2xl flex items-center justify-center p-3 sm:p-8 select-none"
+              >
+                {/* Top Navigation & Status Bar */}
+                <div className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-8 flex items-center justify-between z-50 pointer-events-none">
+                  <div className="flex items-center gap-3 pointer-events-auto">
+                    <span className="nord-pill px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#FAF7F2] bg-white/10 border-white/20 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#C7BBD0] animate-pulse" />
+                      <span>STILL ARCHIVE</span>
+                    </span>
+                    <span className="text-xs text-white/70 tracking-widest font-mono">
+                      0{selectedPhotoIndex + 1} / 0{photoWorks.length}
+                    </span>
+                  </div>
 
-              <div className="flex items-center gap-3 pointer-events-auto">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-white/50 hidden md:inline">
-                  Swipe or use &larr; &rarr; keys
-                </span>
+                  <div className="flex items-center gap-3 pointer-events-auto">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-white/50 hidden md:inline">
+                      Swipe or use &larr; &rarr; keys
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setSelectedPhotoIndex(null);
+                      }}
+                      className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/35 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/25 cursor-pointer hover:scale-105 active:scale-95"
+                      title="Close (Esc)"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Previous Arrow Button */}
                 <button
-                  onClick={() => setSelectedPhotoIndex(null)}
-                  className="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 cursor-pointer"
-                  title="Close (Esc)"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handlePrev();
+                  }}
+                  className="absolute left-3 sm:left-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 hover:bg-white/35 text-white flex items-center justify-center transition-all backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] cursor-pointer hover:scale-110 active:scale-95"
+                  aria-label="Previous Still"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.4} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-              </div>
-            </div>
 
-            {/* Previous Arrow Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrev();
-              }}
-              className="absolute left-3 sm:left-6 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 shadow-2xl cursor-pointer hover:scale-105 active:scale-95"
-              aria-label="Previous Still"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+                {/* Next Arrow Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleNext();
+                  }}
+                  className="absolute right-3 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 hover:bg-white/35 text-white flex items-center justify-center transition-all backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.5)] cursor-pointer hover:scale-110 active:scale-95"
+                  aria-label="Next Still"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.4} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-            {/* Next Arrow Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext();
-              }}
-              className="absolute right-3 sm:right-6 z-40 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20 shadow-2xl cursor-pointer hover:scale-105 active:scale-95"
-              aria-label="Next Still"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Swipeable Photo Container with Drag Physics */}
-            <motion.div
-              key={activePhoto.id}
-              initial={{
-                opacity: 0,
-                x: swipeDirection > 0 ? 80 : -80,
-                scale: 0.96,
-              }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{
-                opacity: 0,
-                x: swipeDirection > 0 ? -80 : 80,
-                scale: 0.96,
-              }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.3}
-              onDragEnd={(e, { offset, velocity }) => {
-                if (offset.x > 60 || velocity.x > 400) {
-                  handlePrev();
-                } else if (offset.x < -60 || velocity.x < -400) {
-                  handleNext();
-                }
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-w-3xl w-full bg-[#FAF7F2] rounded-[2.5rem] overflow-hidden shadow-2xl border border-[#22092C]/20 flex flex-col cursor-grab active:cursor-grabbing"
-            >
-              {/* Photo Viewport */}
-              <div className="relative aspect-[4/5] sm:aspect-[16/11] max-h-[60vh] w-full bg-[#16041D]">
-                <Image
-                  src={activePhoto.imageWebp || activePhoto.image}
-                  alt={activePhoto.title}
-                  fill
-                  priority
-                  draggable={false}
-                  className="object-cover"
-                />
-              </div>
-
-              {/* Detail Drawer */}
-              <div className="p-6 sm:p-8 flex flex-col gap-2 bg-[#FAF7F2]">
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-[#22092C]/60 font-mono">
-                  <span>{activePhoto.client}</span>
-                  <span>{activePhoto.resolution}</span>
-                </div>
-                <h3 className="font-syne text-2xl font-bold text-[#22092C]">
-                  {activePhoto.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#22092C]/75 leading-relaxed mt-1">
-                  {activePhoto.desc}
-                </p>
-
-                {/* Footer Bar with Mini Thumbnails or Quick Buttons */}
-                <div className="pt-4 mt-2 border-t border-[#22092C]/10 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    {photoWorks.map((_, dotIdx) => (
-                      <button
-                        key={dotIdx}
-                        onClick={() => {
-                          setSwipeDirection(dotIdx > selectedPhotoIndex ? 1 : -1);
-                          setSelectedPhotoIndex(dotIdx);
-                        }}
-                        className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                          dotIdx === selectedPhotoIndex
-                            ? "w-6 bg-[#22092C]"
-                            : "w-1.5 bg-[#22092C]/25 hover:bg-[#22092C]/50"
-                        }`}
-                        aria-label={`Go to still ${dotIdx + 1}`}
-                      />
-                    ))}
+                {/* Swipeable Photo Container with Drag Physics */}
+                <motion.div
+                  key={activePhoto.id}
+                  initial={{
+                    opacity: 0,
+                    x: swipeDirection > 0 ? 80 : -80,
+                    scale: 0.96,
+                  }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: swipeDirection > 0 ? -80 : 80,
+                    scale: 0.96,
+                  }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.25}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    if (offset.x > 35 || velocity.x > 150) {
+                      handlePrev();
+                    } else if (offset.x < -35 || velocity.x < -150) {
+                      handleNext();
+                    }
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative max-w-3xl w-full bg-[#FAF7F2] rounded-[2.5rem] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.6)] border border-white/20 flex flex-col cursor-grab active:cursor-grabbing z-40 my-auto"
+                >
+                  {/* Photo Viewport */}
+                  <div className="relative aspect-[4/5] sm:aspect-[16/11] max-h-[60vh] w-full bg-[#16041D]">
+                    <Image
+                      src={activePhoto.imageWebp || activePhoto.image}
+                      alt={activePhoto.title}
+                      fill
+                      priority
+                      draggable={false}
+                      className="object-cover pointer-events-none"
+                    />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handlePrev}
-                      className="px-4 py-2 rounded-full border border-[#22092C]/20 text-[#22092C] text-xs font-mono font-bold hover:bg-[#22092C]/5 transition-colors cursor-pointer"
-                    >
-                      &larr; Prev
-                    </button>
-                    <button
-                      onClick={handleNext}
-                      className="px-4 py-2 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs font-mono font-bold hover:bg-[#3D1550] transition-colors cursor-pointer"
-                    >
-                      Next &rarr;
-                    </button>
+                  {/* Detail Drawer */}
+                  <div className="p-6 sm:p-8 flex flex-col gap-2 bg-[#FAF7F2]">
+                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-[#22092C]/60 font-mono">
+                      <span>{activePhoto.client}</span>
+                      <span>{activePhoto.resolution}</span>
+                    </div>
+                    <h3 className="font-syne text-2xl font-bold text-[#22092C]">
+                      {activePhoto.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#22092C]/75 leading-relaxed mt-1">
+                      {activePhoto.desc}
+                    </p>
+
+                    {/* Footer Bar with Mini Thumbnails & Explicit Nav Buttons */}
+                    <div className="pt-4 mt-2 border-t border-[#22092C]/10 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        {photoWorks.map((_, dotIdx) => (
+                          <button
+                            key={dotIdx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setSwipeDirection(dotIdx > selectedPhotoIndex ? 1 : -1);
+                              setSelectedPhotoIndex(dotIdx);
+                            }}
+                            className={`h-2 rounded-full transition-all cursor-pointer ${
+                              dotIdx === selectedPhotoIndex
+                                ? "w-8 bg-[#22092C]"
+                                : "w-2 bg-[#22092C]/25 hover:bg-[#22092C]/50"
+                            }`}
+                            aria-label={`Go to still ${dotIdx + 1}`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handlePrev();
+                          }}
+                          className="px-5 py-2.5 rounded-full border border-[#22092C]/20 text-[#22092C] text-xs font-mono font-bold hover:bg-[#22092C]/10 transition-colors cursor-pointer active:scale-95"
+                        >
+                          &larr; Prev
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleNext();
+                          }}
+                          className="px-5 py-2.5 rounded-full bg-[#22092C] text-[#FAF7F2] text-xs font-mono font-bold hover:bg-[#3D1550] transition-colors cursor-pointer active:scale-95 shadow-md"
+                        >
+                          Next &rarr;
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </section>
   );
 }
